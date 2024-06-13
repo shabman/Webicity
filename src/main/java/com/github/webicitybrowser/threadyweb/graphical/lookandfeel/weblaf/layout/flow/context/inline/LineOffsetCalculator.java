@@ -45,7 +45,9 @@ public final class LineOffsetCalculator {
 		} else if (textAlign == TextAlign.CENTER) {
 			return new LineDimension(linePosition.run() + maxLineRun / 2 - lineRun / 2, linePosition.depth(), line.getLineDirection());
 		} else {
-			throw new IllegalStateException("Unsupported text align: " + textAlign);
+			new IllegalStateException("Unsupported text align: " + textAlign).printStackTrace();
+			//throw new IllegalStateException("Unsupported text align: " + textAlign);
+			return linePosition;
 		}
 	}
 
