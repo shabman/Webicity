@@ -31,13 +31,10 @@ public final class FlexMainSizeDetermination {
 	}
 
 	private static List<FlexLine> determineLinesWithMainSizesNoWrap(LayoutManagerContext layoutManagerContext, List<FlexItem> flexItems) {
-		AbsoluteSize preferredSize = layoutManagerContext.localRenderContext().getPreferredSize();
 		FlexDirection flexDirection = FlexUtils.getFlexDirection(layoutManagerContext.layoutDirectives());
-		float crossSize = FlexDimension.createFrom(preferredSize, flexDirection).cross();
 		FlexLine flexLine = new FlexLine(flexDirection);
 		setLineInitialMainSize(layoutManagerContext, flexLine, flexDirection);
-		for (FlexItem flexItem: flexItems) {
-			flexItem.setCrossSize(crossSize);
+			for (FlexItem flexItem: flexItems) {
 			determineMainSize(layoutManagerContext, flexItem, flexDirection);
 			flexLine.addFlexItem(flexItem);
 		}
@@ -49,9 +46,7 @@ public final class FlexMainSizeDetermination {
 		DirectivePool layoutDirectives = layoutManagerContext.layoutDirectives();
 		FlexDirection flexDirection = FlexUtils.getFlexDirection(layoutDirectives);
 		AbsoluteSize preferredSize = layoutManagerContext.localRenderContext().getPreferredSize();
-		float crossSize = FlexDimension.createFrom(preferredSize, flexDirection).cross();
 		for (FlexItem flexItem: flexItems) {
-			flexItem.setCrossSize(crossSize);
 			determineMainSize(layoutManagerContext, flexItem, FlexUtils.getFlexDirection(layoutDirectives));
 		}
 

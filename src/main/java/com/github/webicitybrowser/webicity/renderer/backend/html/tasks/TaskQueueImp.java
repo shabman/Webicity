@@ -17,11 +17,7 @@ public class TaskQueueImp implements TaskQueue {
 
 	@Override
 	public Optional<Runnable> poll() {
-		if (tasks.isEmpty()) {
-			return Optional.empty();
-		}
-		
-		return Optional.of(tasks.poll());
+		return Optional.ofNullable(tasks.poll());
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flexbox;
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
+import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
 import com.github.webicitybrowser.thready.drawing.core.text.FontMetrics;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIPipeline;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
@@ -26,7 +27,7 @@ public final class FlexItemRenderer {
 		RenderedUnit unit = UIPipeline.render(flexItem.getBox(), flexItemRenderContext.globalRenderContext(), itemLocalRenderContext);
 		flexItem.setRenderedUnit(unit);
 
-		return adjustFitSize(flexItem, unit.fitSize());
+		return adjustFitSize(flexItem, adjustedPreferredSize, unit.fitSize());
 	}
 
 	private static AbsoluteSize getAdjustedPreferredSize(FlexItem flexItem, FlexItemRenderContext flexItemRenderContext) {
@@ -37,14 +38,19 @@ public final class FlexItemRenderer {
 		float[] zeroAutoMargins = FlexMarginCalculations.zeroAutoMargins(boxOffsetDimensions.margins());
 		adjustedPreferredSize = LayoutSizeUtils.subtractPadding(adjustedPreferredSize, zeroAutoMargins);
 		adjustedPreferredSize = LayoutSizeUtils.subtractPadding(adjustedPreferredSize, boxOffsetDimensions.padding());
+		adjustedPreferredSize = LayoutSizeUtils.subtractPadding(adjustedPreferredSize, boxOffsetDimensions.borders());
 		return adjustedPreferredSize;
 	}
 
-	private static AbsoluteSize adjustFitSize(FlexItem flexItem, AbsoluteSize fitSize) {
+	private static AbsoluteSize adjustFitSize(FlexItem flexItem, AbsoluteSize adjustedPreferredSize, AbsoluteSize fitSize) {
 		BoxOffsetDimensions boxOffsetDimensions = flexItem.getSizePreferences().getBoxOffsetDimensions();
+		fitSize = new AbsoluteSize(
+			adjustedPreferredSize.width() != RelativeDimension.UNBOUNDED ? adjustedPreferredSize.width() : fitSize.width(),
+			adjustedPreferredSize.height() != RelativeDimension.UNBOUNDED ? adjustedPreferredSize.height() : fitSize.height());
 		float[] zeroAutoMargins = FlexMarginCalculations.zeroAutoMargins(boxOffsetDimensions.margins());
 		fitSize = LayoutSizeUtils.addPadding(fitSize, zeroAutoMargins);
 		fitSize = LayoutSizeUtils.addPadding(fitSize, boxOffsetDimensions.padding());
+		fitSize = LayoutSizeUtils.addPadding(fitSize, boxOffsetDimensions.borders());
 		return fitSize;
 	}
 

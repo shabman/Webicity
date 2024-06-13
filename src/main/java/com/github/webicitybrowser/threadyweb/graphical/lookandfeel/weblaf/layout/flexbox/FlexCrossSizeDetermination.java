@@ -111,6 +111,7 @@ public final class FlexCrossSizeDetermination {
 		FlexItemRenderer.FlexItemRenderContext flexItemRenderContext = new FlexItemRenderer.FlexItemRenderContext(
 			globalRenderContext, flexDirection, localRenderContext.getParentFontMetrics()
 		);
+		flexItem.setCrossSize(flexItem.getSizePreferences().getCrossSize(flexDirection));
 		AbsoluteSize fitSize = FlexItemRenderer.render(flexItem, flexItemRenderContext);
 		FlexDimension flexDimension = FlexDimension.createFrom(fitSize, flexDirection);
 		flexItem.setCrossSize(flexDimension.cross());

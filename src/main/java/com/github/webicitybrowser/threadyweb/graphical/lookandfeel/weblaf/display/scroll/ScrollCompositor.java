@@ -18,7 +18,7 @@ public final class ScrollCompositor {
 		Rectangle compositeLayerRect = new Rectangle(
 			localCompositeContext.documentRect().position(),
 			unit.innerUnitSize());
-		CompositeParameters compositeParameters = new CompositeParameters(CompositeReference.PARENT, () -> scrollContext.scrollPosition());
+		CompositeParameters compositeParameters = new CompositeParameters(CompositeReference.PARENT, () -> fixScrollPosition(scrollContext.scrollPosition()));
 		compositeContext.enterChildContext(compositeLayerRect, compositeParameters);
 		compositeChild(unit, compositeContext);
 		compositeContext.exitChildContext();
@@ -31,6 +31,12 @@ public final class ScrollCompositor {
 		LocalCompositeContext childLocalCompositeContext = new LocalCompositeContext(childDocumentRect);
 		
 		UIPipeline.composite(unit.innerUnit(), compositeContext, childLocalCompositeContext);
+	}
+
+	private static AbsolutePosition fixScrollPosition(AbsolutePosition scrollPosition) {
+		return new AbsolutePosition(
+			scrollPosition.x() == ScrollbarStyles.NOT_PRESENT ? 0 : scrollPosition.x(),
+			scrollPosition.y() == ScrollbarStyles.NOT_PRESENT ? 0 : scrollPosition.y());
 	}
 
 }

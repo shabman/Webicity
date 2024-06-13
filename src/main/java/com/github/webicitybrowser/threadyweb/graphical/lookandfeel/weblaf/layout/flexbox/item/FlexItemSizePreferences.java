@@ -65,4 +65,12 @@ public class FlexItemSizePreferences {
 		}
 	}
 
+	public float getCrossSize(FlexDirection flexDirection) {
+		if (flexDirection.isHorizontal()) {
+			return LayoutSizeUtils.computePreferredHeight(styleDirectives, sizingContext);
+		} else {
+			return LayoutSizeUtils.computePreferredWidth(styleDirectives, sizingContext);
+		}
+	}
+
 }

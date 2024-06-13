@@ -10,18 +10,18 @@ switch (OperatingSystem.current()) {
 	case OperatingSystem.LINUX:
 		project.ext.lwjglNatives = "natives-linux"
 		project.ext.skijaNatives = "skija-linux-x64"
-		project.ext.skijaVersion = "0.116.1"
+		project.ext.skijaVersion = "0.116.2"
 		break
 	case OperatingSystem.WINDOWS:
 		project.ext.lwjglNatives = "natives-windows"
 		project.ext.skijaNatives = "skija-windows-x64"
-		project.ext.skijaVersion = "0.116.1"
+		project.ext.skijaVersion = "0.116.2"
 		break
 	case OperatingSystem.MAC_OS:
 		applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
 		project.ext.lwjglNatives = "natives-macos-arm64"
 		project.ext.skijaNatives = "skija-macos-arm64"
-		project.ext.skijaVersion = "0.116.1"
+		project.ext.skijaVersion = "0.116.2"
 		break
 }
 
@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-	implementation platform("org.lwjgl:lwjgl-bom:3.3.2")
+	implementation platform("org.lwjgl:lwjgl-bom:3.3.3")
 
 	implementation "org.lwjgl:lwjgl"
 	implementation "org.lwjgl:lwjgl-glfw"
@@ -40,17 +40,17 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
 	
-	implementation 'com.github.marianobarrios:tls-channel:0.8.0'
+	implementation 'com.github.marianobarrios:tls-channel:0.9.0'
 	
 	implementation 'com.github.taucher2003:t2003-logger-impl:1.0.2'
 	implementation 'com.github.taucher2003:t2003-logger-binder:1.0.2'
 	
-	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.google.code.gson:gson:2.11.0'
 	
 	implementation "io.github.humbleui:${skijaNatives}:${skijaVersion}"
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
 }
 
 tasks.named('test') {
