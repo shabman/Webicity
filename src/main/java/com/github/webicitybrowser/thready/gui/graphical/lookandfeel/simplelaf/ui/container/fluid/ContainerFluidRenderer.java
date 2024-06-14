@@ -15,7 +15,7 @@ public final class ContainerFluidRenderer {
 
 	public static ContainerRenderedUnit render(ChildrenBox box, GlobalRenderContext renderContext, LocalRenderContext localRenderContext) {
 		List<Box> children = box.getChildrenTracker().getChildren();
-		FluidLines lines = new HorizontalFluidLines(renderContext, localRenderContext, localRenderContext.getPreferredSize());
+		FluidLines lines = new HorizontalFluidLines(renderContext, localRenderContext.preferredSize());
 		renderChildren(children, lines);
 		
 		LayoutResult layoutResult = lines.getLayoutResult();

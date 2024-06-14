@@ -6,9 +6,7 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDispl
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
-import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.util.LayoutSizeUtils;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.util.WebFontUtil;
-import com.github.webicitybrowser.threadyweb.graphical.value.SizeCalculation.SizeCalculationContext;
 import com.github.webicitybrowser.threadyweb.tree.TextComponent;
 
 public record TextBox(
@@ -25,13 +23,8 @@ public record TextBox(
 	}
 
 	public Font2D getFont(GlobalRenderContext renderContext, LocalRenderContext localRenderContext) {
-		if (fontOverride != null) {
-			return fontOverride;
-		}
-
-		SizeCalculationContext calculationContext = LayoutSizeUtils.createSizeCalculationContext(renderContext, localRenderContext, true);
-
-		return WebFontUtil.getFont(styleDirectives, calculationContext, renderContext);
+		if (fontOverride != null) return fontOverride;
+		return WebFontUtil.getFont(styleDirectives, renderContext);
 	}
 	
 }

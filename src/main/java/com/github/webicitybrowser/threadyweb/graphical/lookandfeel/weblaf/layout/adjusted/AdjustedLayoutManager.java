@@ -2,7 +2,7 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import com.github.webicitybrowser.thready.dimensions.AbsolutePosition;
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
@@ -28,8 +28,8 @@ public class AdjustedLayoutManager implements SolidLayoutManager {
 
 	@Override
 	public LayoutResult render(LayoutManagerContext layoutManagerContext) {
-		Function<Boolean, SizeCalculationContext> sizeCalculationContextGenerator =
-			isHorizontal -> LayoutSizeUtils.createSizeCalculationContext(layoutManagerContext, false);
+		BiFunction<DirectivePool, Boolean, SizeCalculationContext> sizeCalculationContextGenerator =
+			(directives, isHorizontal) -> LayoutSizeUtils.createSizeCalculationContext(layoutManagerContext, directives, isHorizontal);
 
 		List<Box> children = layoutManagerContext.children();
 		List<Box> childrenForInnerLayout = new ArrayList<>(children.size());
@@ -54,12 +54,13 @@ public class AdjustedLayoutManager implements SolidLayoutManager {
 	}
 
 	private ChildLayoutResult[] adjustRelativeChildren(
-		ChildLayoutResult[] originalChildLayoutResults, Function<Boolean, SizeCalculationContext> sizeCalculationContextGenerator
+		ChildLayoutResult[] originalChildLayoutResults, BiFunction<DirectivePool, Boolean, SizeCalculationContext> sizeCalculationContextGenerator
 	) {
 		ChildLayoutResult[] adjustedChildLayoutResults = new ChildLayoutResult[originalChildLayoutResults.length];
 		for (int i = 0; i < originalChildLayoutResults.length; i++) {
 			ChildLayoutResult originalLayoutResult = originalChildLayoutResults[i];
-			if (PositionOffsetUtil.getPositionType(originalLayoutResult.unit().styleDirectives()) == PositionType.RELATIVE) {
+			DirectivePool directives = originalLayoutResult.unit().styleDirectives();
+			if (PositionOffsetUtil.getPositionType(directives) == PositionType.RELATIVE) {
 				adjustedChildLayoutResults[i] = adjustRelativeChild(originalLayoutResult, sizeCalculationContextGenerator);
 			} else {
 				adjustedChildLayoutResults[i] = originalLayoutResult;
@@ -70,10 +71,12 @@ public class AdjustedLayoutManager implements SolidLayoutManager {
 	}
 
 	private ChildLayoutResult adjustRelativeChild(
-		ChildLayoutResult originalLayoutResult, Function<Boolean, SizeCalculationContext> sizeCalculationContextGenerator
+		ChildLayoutResult originalLayoutResult, BiFunction<DirectivePool, Boolean, SizeCalculationContext> sizeCalculationContextGenerator
 	) {
 		DirectivePool directives = originalLayoutResult.unit().styleDirectives();
-		AbsolutePosition positionOffset = PositionOffsetUtil.getRelativePositionOffset(sizeCalculationContextGenerator, directives);
+		AbsolutePosition positionOffset = PositionOffsetUtil.getRelativePositionOffset(
+			isHorizontal -> sizeCalculationContextGenerator.apply(directives, isHorizontal),
+			directives);
 		AbsolutePosition adjustedPosition = AbsoluteDimensionsMath.sum(
 			originalLayoutResult.relativeRect().position(), positionOffset, AbsolutePosition::new);
 		ChildLayoutResult adjustedChildLayoutResult = new ChildLayoutResult(

@@ -13,7 +13,7 @@ public final class Flexer {
 
 	public static void resolveFlexibleLengths(FlexLine flexLine, LocalRenderContext localRenderContext) {
 		float lineMainSize = FlexDimension
-			.createFrom(localRenderContext.getPreferredSize(), flexLine.getFlexDirection())
+			.createFrom(localRenderContext.preferredSize(), flexLine.getFlexDirection())
 			.main();
 
 		List<FlexItem> flexItems = flexLine.getFlexItems();

@@ -83,7 +83,7 @@ public final class FlowBlockMarginCalculations {
 		}
 
 		SizeCalculationContext sizeCalculationContext = LayoutSizeUtils.createSizeCalculationContext(
-			state.flowContext().layoutManagerContext(), true);
+			state.flowContext().layoutManagerContext(), box.styleDirectives(), true);
 		return sizeCalculation.calculate(sizeCalculationContext);
 	}
 

@@ -3,7 +3,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 import java.util.function.Function;
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
-import com.github.webicitybrowser.thready.drawing.core.text.FontMetrics;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIPipeline;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
@@ -21,7 +20,7 @@ public final class FlowBlockUnitRenderer {
 
 	public static FlowBlockPrerenderSizingInfo prerenderChild(FlowBlockUnitRenderingContext context) {
 		FlowBlockRendererState state = context.state();
-		AbsoluteSize parentSize = state.getLocalRenderContext().getPreferredSize();
+		AbsoluteSize parentSize = state.getLocalRenderContext().preferredSize();
 		Box childBox = context.childBox();
 		BoxOffsetDimensions renderParameters = context.renderParameters();
 
@@ -51,10 +50,9 @@ public final class FlowBlockUnitRenderer {
 	}
 
 	private static LayoutSizingContext createLayoutSizingContext(FlowBlockRendererState state, Box childBox, BoxOffsetDimensions boxOffsetDimensions) {
-		FontMetrics fontMetrics = state.getFont().getMetrics();
 		Function<Boolean, SizeCalculationContext> sizeCalculationContextGenerator =
 			isHorizontal -> LayoutSizeUtils.createSizeCalculationContext(
-				state.flowContext().layoutManagerContext(), fontMetrics, isHorizontal);
+				state.flowContext().layoutManagerContext(), childBox.styleDirectives(), isHorizontal);
 
 		return LayoutSizeUtils.createLayoutSizingContext(
 			childBox.styleDirectives(), sizeCalculationContextGenerator, boxOffsetDimensions

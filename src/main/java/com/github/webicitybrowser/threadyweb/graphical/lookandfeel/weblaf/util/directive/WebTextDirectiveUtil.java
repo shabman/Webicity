@@ -18,7 +18,7 @@ public final class WebTextDirectiveUtil {
 	
 	private WebTextDirectiveUtil() {}
 
-	public static FontSource[] getFontSource(DirectivePool directives) {
+	public static FontSource[] getFontSources(DirectivePool directives) {
 		return directives
 			.inheritDirectiveOrEmpty(FontFamilyDirective.class)
 			.map(directive -> directive.getFontFamilies())

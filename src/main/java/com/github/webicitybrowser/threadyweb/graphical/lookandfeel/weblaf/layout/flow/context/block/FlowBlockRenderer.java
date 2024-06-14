@@ -2,25 +2,19 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 
 import java.util.List;
 
-import com.github.webicitybrowser.thready.drawing.core.text.Font2D;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutResult;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.base.stage.box.BasicAnonymousFluidBox;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.FlowRenderContext;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.floatbox.FlowBlockFloatProcessor;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.floatbox.FlowBlockFloatRenderer;
-import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.util.FlowUtils;
 
 public final class FlowBlockRenderer {
 	
 	private FlowBlockRenderer() {}
 
 	public static LayoutResult render(FlowRenderContext context) {
-		Font2D font = FlowUtils.computeFont(
-			context.layoutManagerContext(),
-			context.layoutManagerContext().layoutDirectives(),
-			context.localRenderContext().getParentFontMetrics());
-		FlowBlockRendererState state = new FlowBlockRendererState(context, font);
+		FlowBlockRendererState state = new FlowBlockRendererState(context);
 		renderChildren(state, context.layoutManagerContext().children());
 
 		return LayoutResult.create(state.childLayoutResults(), state.positionTracker().fitSize());

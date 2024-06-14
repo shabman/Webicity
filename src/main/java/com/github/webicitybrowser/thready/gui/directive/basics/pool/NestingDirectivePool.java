@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import com.github.webicitybrowser.thready.gui.directive.core.Directive;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.ComposedDirectivePool;
@@ -51,6 +52,16 @@ public class NestingDirectivePool implements ComposedDirectivePool<DirectivePool
 		
 		return inherit(directive, directiveClass);
 	};
+
+	@Override
+	public <T extends Directive> T derive(Class<T> directiveClass, BiFunction<DirectivePool, DirectivePool, T> deriveFunction) {
+		// TODO: Invalidate
+		Optional<T> optOrEmpty = getDirectiveOrEmpty(directiveClass);
+		if (optOrEmpty.isPresent()) return optOrEmpty.get();
+		T result = deriveFunction.apply(this, parent);
+		directive(result);
+		return result;
+	}
 
 	@Override
 	public void addDirectivePool(DirectivePool pool) {

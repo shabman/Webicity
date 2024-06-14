@@ -12,7 +12,7 @@ public final class MenuButtonRenderer {
 
 	public static MenuButtonUnit render(MenuButtonBox box, GlobalRenderContext globalContext, LocalRenderContext localContext) {
 		Font2D font = loadFont(box, globalContext);
-		return new MenuButtonUnit(localContext.getPreferredSize(), box, font);
+		return new MenuButtonUnit(localContext.preferredSize(), box, font);
 	}
 	
 	private static Font2D loadFont(MenuButtonBox box, GlobalRenderContext renderContext) {

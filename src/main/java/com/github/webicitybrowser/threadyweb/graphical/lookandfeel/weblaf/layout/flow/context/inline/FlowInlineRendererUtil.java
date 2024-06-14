@@ -36,7 +36,7 @@ public final class FlowInlineRendererUtil {
 	private static float calculateRemainingLineWidth(FlowInlineRendererState state, AbsolutePosition currentPositionOffset) {
 		// TODO: Non-LTR line direction
 		FlowRootContextSwitch contextSwitch = state.flowContext().flowRootContextSwitch();
-		float parentWidth = state.getLocalRenderContext().getPreferredSize().width();
+		float parentWidth = state.getLocalRenderContext().preferredSize().width();
 		if (parentWidth == RelativeDimension.UNBOUNDED) {
 			return parentWidth;
 		}

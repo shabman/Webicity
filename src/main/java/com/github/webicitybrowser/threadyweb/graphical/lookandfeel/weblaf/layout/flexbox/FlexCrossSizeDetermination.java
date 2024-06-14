@@ -6,7 +6,6 @@ import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
 import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutManagerContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
-import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.flexbox.FlexDirectionDirective.FlexDirection;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.flexbox.FlexWrapDirective.FlexWrap;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flexbox.item.FlexItem;
@@ -39,7 +38,7 @@ public final class FlexCrossSizeDetermination {
 	private static void distributeExtraSpace(LayoutManagerContext layoutManagerContext, List<FlexLine> flexLines) {
 		float preferredCrossSize = FlexDimension
 			.createFrom(
-				layoutManagerContext.localRenderContext().getPreferredSize(),
+				layoutManagerContext.localRenderContext().preferredSize(),
 				FlexUtils.getFlexDirection(layoutManagerContext.layoutDirectives()))
 			.cross();
 		if (preferredCrossSize == RelativeDimension.UNBOUNDED) return;
@@ -56,7 +55,7 @@ public final class FlexCrossSizeDetermination {
 
 	private static boolean determineNoWrapLineCrossSize(LayoutManagerContext layoutManagerContext, FlexLine flexLine) {
 		float parentSize = FlexDimension
-			.createFrom(layoutManagerContext.localRenderContext().getPreferredSize(), flexLine.getFlexDirection())
+			.createFrom(layoutManagerContext.localRenderContext().preferredSize(), flexLine.getFlexDirection())
 			.cross();
 		if (parentSize != RelativeDimension.UNBOUNDED) {
 			flexLine.setCrossSize(parentSize);
@@ -91,10 +90,8 @@ public final class FlexCrossSizeDetermination {
 		FlexDirection flexDirection = flexLine.getFlexDirection();
 		flexItem.setCrossSize(flexLine.getCrossSize());
 		GlobalRenderContext globalRenderContext = layoutManagerContext.globalRenderContext();
-		LocalRenderContext localRenderContext = layoutManagerContext.localRenderContext();
 		FlexItemRenderer.FlexItemRenderContext flexItemRenderContext = new FlexItemRenderer.FlexItemRenderContext(
-			globalRenderContext, flexDirection, localRenderContext.getParentFontMetrics()
-		);
+			globalRenderContext, flexDirection);
 		// Make sure children of the item are rendered with the correct cross size
 		FlexItemRenderer.render(flexItem, flexItemRenderContext);
 	}
@@ -107,10 +104,8 @@ public final class FlexCrossSizeDetermination {
 		LayoutManagerContext layoutManagerContext, FlexItem flexItem, FlexDirection flexDirection
 	) {
 		GlobalRenderContext globalRenderContext = layoutManagerContext.globalRenderContext();
-		LocalRenderContext localRenderContext = layoutManagerContext.localRenderContext();
 		FlexItemRenderer.FlexItemRenderContext flexItemRenderContext = new FlexItemRenderer.FlexItemRenderContext(
-			globalRenderContext, flexDirection, localRenderContext.getParentFontMetrics()
-		);
+			globalRenderContext, flexDirection);
 		flexItem.setCrossSize(flexItem.getSizePreferences().getCrossSize(flexDirection));
 		AbsoluteSize fitSize = FlexItemRenderer.render(flexItem, flexItemRenderContext);
 		FlexDimension flexDimension = FlexDimension.createFrom(fitSize, flexDirection);

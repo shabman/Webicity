@@ -18,7 +18,7 @@ public final class ContainerSolidRenderer {
 			globalRenderContext, localRenderContext);
 		LayoutResult layoutResults = new FlowingLayoutManager().render(layoutManagerContext);
 		
-		ContainerRenderedUnit renderedUnit = new ContainerRenderedUnit(box, localRenderContext.getPreferredSize(), layoutResults.childLayoutResults());
+		ContainerRenderedUnit renderedUnit = new ContainerRenderedUnit(box, localRenderContext.preferredSize(), layoutResults.childLayoutResults());
 		return renderedUnit;
 	}
 	

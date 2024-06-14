@@ -14,7 +14,7 @@ public final class URLBarRenderer {
 		Font2D font = renderContext
 			.resourceLoader()
 			.loadFont(SimpleDirectiveUtil.getFontSettings(box.styleDirectives()));
-		return new URLBarUnit(localRenderContext.getPreferredSize(), font, box);
+		return new URLBarUnit(localRenderContext.preferredSize(), font, box);
 	}
 
 }

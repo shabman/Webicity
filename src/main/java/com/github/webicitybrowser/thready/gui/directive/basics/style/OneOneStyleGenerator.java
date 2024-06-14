@@ -54,7 +54,7 @@ public class OneOneStyleGenerator implements StyleGenerator {
 				// TODO: Make ComponentUI responsible for handling directive changes
 				if (directive instanceof GraphicalDirective graphicalDirective) {
 					componentUI.invalidate(graphicalDirective.getInvalidationLevel());
-				} else if (directive instanceof ChildrenDirective childrenDirective) {
+				} else if (directive instanceof ChildrenDirective) {
 					componentUI.invalidate(InvalidationLevel.BOX);
 				}
 			}

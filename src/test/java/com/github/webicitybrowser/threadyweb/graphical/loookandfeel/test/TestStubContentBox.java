@@ -41,7 +41,7 @@ public class TestStubContentBox implements Box {
 		Mockito.when(renderedUnit.styleDirectives()).thenReturn(styleDirectives);
 		Mockito.when(display.renderBox(Mockito.eq(this), Mockito.any(), Mockito.any())).thenAnswer((invocation) -> {
 			LocalRenderContext localRenderContext = invocation.getArgument(2);
-			lastTargetSize = localRenderContext.getPreferredSize();
+			lastTargetSize = localRenderContext.preferredSize();
 			
 			return renderedUnit;
 		});

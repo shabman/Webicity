@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
-import com.github.webicitybrowser.thready.drawing.core.text.FontMetrics;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.ChildLayoutResult;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutManagerContext;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutResult;
@@ -49,8 +48,6 @@ public final class FlowInlineRenderer {
 	private static void prepareTextRendering(FlowInlineRendererState state) {
 		FlowRenderContext context = state.flowContext();
 		LayoutManagerContext layoutManagerContext = context.layoutManagerContext();
-		state.getFontStack().push(FlowUtils.computeFont(
-			context.layoutManagerContext(), layoutManagerContext.layoutDirectives(), context.localRenderContext().getParentFontMetrics()));
 		FlowInlineTextRenderer.preadjustTextBoxes(state, layoutManagerContext.children());
 	}
 
@@ -64,7 +61,7 @@ public final class FlowInlineRenderer {
 		if (childBox instanceof TextBox textBox) {
 			FlowInlineTextRenderer.addTextBoxToLine(state, textBox);
 		} else if (childBox instanceof BreakBox) {
-			FlowInlineBreakRenderer.addBreakBoxToLine(state);
+			FlowInlineBreakRenderer.addBreakBoxToLine(state, childBox.styleDirectives());
 		} else if (childBox.managesSelf()) {
 			FlowInlineSelfManagedRenderer.addSelfManagedBoxToLine(state, childBox);
 		} else {
@@ -89,10 +86,6 @@ public final class FlowInlineRenderer {
 		UnitEnterMarker unitEnterMarker = new UnitEnterMarker(true, childBox.styleDirectives());
 		FlowInlineRendererUtil.startNewLineIfNotFits(state, createSizeFromUnitEnterMarker(unitEnterMarker));
 		lineContext.currentLine().addMarker(unitEnterMarker);
-
-		FontMetrics parentFontMetrics = state.getFontStack().peek().getMetrics();
-		state.getFontStack().push(FlowUtils.computeFont(
-			state.flowContext().layoutManagerContext(), childBox.styleDirectives(), parentFontMetrics));
 	}
 
 	private static void popFormattingInfo(FlowInlineRendererState state, Box childBox) {
@@ -101,8 +94,6 @@ public final class FlowInlineRenderer {
 		UnitExitMarker unitExitMarker = new UnitExitMarker(childBox.styleDirectives());
 		FlowInlineRendererUtil.startNewLineIfNotFits(state, createSizeFromUnitExitMarker(unitExitMarker));
 		lineContext.currentLine().addMarker(unitExitMarker);
-
-		state.getFontStack().pop();
 	}
 
 	private static AbsoluteSize createSizeFromUnitEnterMarker(UnitEnterMarker marker) {

@@ -15,7 +15,7 @@ public final class ScrollRenderer {
 	private ScrollRenderer() {}
 
 	public static ScrollUnit renderBox(ScrollBox box, GlobalRenderContext globalRenderContext,  LocalRenderContext localRenderContext) {
-		AbsoluteSize outerSize = localRenderContext.getPreferredSize();
+		AbsoluteSize outerSize = localRenderContext.preferredSize();
 		RenderedUnit innerUnitRenderAttempt = renderInnerBox(box, globalRenderContext, localRenderContext, outerSize);
 		AbsoluteSize initialInnerUnitSize = innerUnitRenderAttempt.fitSize();
 
@@ -74,10 +74,7 @@ public final class ScrollRenderer {
 		ScrollBox box, GlobalRenderContext globalRenderContext, LocalRenderContext localRenderContext, AbsoluteSize allowedSize
 	) {
 		Box innerBox = box.innerBox();
-		LocalRenderContext innerLocalRenderContext = LocalRenderContext.create(
-			allowedSize,
-			localRenderContext.getParentFontMetrics(),
-			new ContextSwitch[0]);
+		LocalRenderContext innerLocalRenderContext = LocalRenderContext.create(allowedSize, new ContextSwitch[0]);
 		RenderedUnit innerUnitRenderAttempt = UIPipeline.render(innerBox, globalRenderContext, innerLocalRenderContext);
 
 		return innerUnitRenderAttempt;

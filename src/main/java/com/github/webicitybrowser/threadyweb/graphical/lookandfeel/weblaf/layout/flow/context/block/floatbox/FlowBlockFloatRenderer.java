@@ -88,7 +88,7 @@ public final class FlowBlockFloatRenderer {
 	private static void addRightFloat(FlowBlockRendererState state, RenderedUnit childUnit, float blockPosition) {
 		FlowRootContextSwitch flowRootContextSwitch = state.flowContext().flowRootContextSwitch();
 		FloatTracker floatTracker = flowRootContextSwitch.floatContext().getFloatTracker();
-		AbsoluteSize parentSize = state.getLocalRenderContext().getPreferredSize();
+		AbsoluteSize parentSize = state.getLocalRenderContext().preferredSize();
 		float posXRight =
 			parentSize.width() -
 			floatTracker.getRightInlineOffset(blockPosition, parentSize.width()) -
@@ -108,7 +108,7 @@ public final class FlowBlockFloatRenderer {
 	private static LocalRenderContext createLocalRenderContext(FlowBlockRendererState state, AbsoluteSize preferredSize) {
 		// We do not pass the flow root context switch, as the float establishes its own root context
 		// TODO: Make sure we are passing the correct font metrics
-		return LocalRenderContext.create(preferredSize, state.getLocalRenderContext().getParentFontMetrics(), new ContextSwitch[0]);
+		return LocalRenderContext.create(preferredSize, new ContextSwitch[0]);
 	}
 
 }

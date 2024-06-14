@@ -1,6 +1,8 @@
 package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.inline;
 
 import com.github.webicitybrowser.thready.drawing.core.text.Font2D;
+import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
+import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.util.WebFontUtil;
 
 /**
  * This class allows for handling an explicit break (<br>) in an
@@ -15,8 +17,8 @@ public class FlowInlineBreakRenderer {
 	 * Adds an explicit break to the line.
 	 * @param state The inline context state
 	 */
-	public static void addBreakBoxToLine(FlowInlineRendererState state) {
-		Font2D font = state.getFontStack().peek();
+	public static void addBreakBoxToLine(FlowInlineRendererState state, DirectivePool directives) {
+		Font2D font = WebFontUtil.getFont(directives, state.getGlobalRenderContext());
 		float fontHeight = font.getMetrics().getCapHeight() + font.getMetrics().getDescent();
 
 		state.lineContext().currentLine().ensureMinHeight(fontHeight);

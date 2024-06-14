@@ -34,12 +34,12 @@ public final class UIPipeline {
 		Box box, GlobalRenderContext globalRenderContext, LocalRenderContext localRenderContext
 	) {
 		RenderCache renderCache = globalRenderContext.renderCache();
-		V renderedUnit = (V) renderCache.get(box, localRenderContext.getPreferredSize());
+		V renderedUnit = (V) renderCache.get(box, localRenderContext.preferredSize());
 		if (renderedUnit != null) return renderedUnit;
 
 		UIDisplay<?, U, V> display = (UIDisplay<?, U, V>) box.display();
 		V result = display.renderBox((U) box, globalRenderContext, localRenderContext);
-		renderCache.put(box, localRenderContext.getPreferredSize(), result);
+		renderCache.put(box, localRenderContext.preferredSize(), result);
 		renderCache.put(box, result.fitSize(), result);
 		return result;
 	}

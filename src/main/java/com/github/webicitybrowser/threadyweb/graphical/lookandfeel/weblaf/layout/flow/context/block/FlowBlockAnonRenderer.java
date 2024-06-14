@@ -23,8 +23,7 @@ public final class FlowBlockAnonRenderer {
 		GlobalRenderContext globalRenderContext = state.getGlobalRenderContext();
 		LocalRenderContext localRenderContext = state.getLocalRenderContext();
 		LocalRenderContext childLocalRenderContext = LocalRenderContext.create(
-			localRenderContext.getPreferredSize(),
-			localRenderContext.getParentFontMetrics(),
+			localRenderContext.preferredSize(),
 			new ContextSwitch[] { createChildFlowRootContextSwitch(state, anonBox) });
 		RenderedUnit childUnit = UIPipeline.render(anonBox, globalRenderContext, childLocalRenderContext);
 		AbsoluteSize adjustedSize = adjustAnonSize(state, preferredSize, childUnit.fitSize());
@@ -45,7 +44,7 @@ public final class FlowBlockAnonRenderer {
 	private static AbsoluteSize adjustAnonSize(
 		FlowBlockRendererState state, AbsoluteSize preferredSize, AbsoluteSize fitSize
 	) {
-		AbsoluteSize parentSize = state.getLocalRenderContext().getPreferredSize();
+		AbsoluteSize parentSize = state.getLocalRenderContext().preferredSize();
 		
 		float widthComponent = preferredSize.width() != RelativeDimension.UNBOUNDED ?
 			preferredSize.width() :

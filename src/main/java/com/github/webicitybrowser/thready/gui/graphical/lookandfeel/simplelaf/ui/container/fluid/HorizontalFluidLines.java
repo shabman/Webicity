@@ -19,7 +19,6 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.r
 public class HorizontalFluidLines implements FluidLines {
 
 	private final GlobalRenderContext globalRenderContext;
-	private final LocalRenderContext localRenderContext;
 	private final AbsoluteSize maxBounds;
 	private final ContextSwitch[] switches;
 	
@@ -29,9 +28,8 @@ public class HorizontalFluidLines implements FluidLines {
 	private float totalWidth = 0;
 	private float curLineHeight = 0;
 
-	public HorizontalFluidLines(GlobalRenderContext globalRenderContext, LocalRenderContext localRenderContext, AbsoluteSize maxBounds) {
+	public HorizontalFluidLines(GlobalRenderContext globalRenderContext, AbsoluteSize maxBounds) {
 		this.globalRenderContext = globalRenderContext;
-		this.localRenderContext = localRenderContext;
 		this.maxBounds = maxBounds;
 		this.switches = new ContextSwitch[] {};
 	}
@@ -59,10 +57,7 @@ public class HorizontalFluidLines implements FluidLines {
 	}
 	
 	private LocalRenderContext createLocalRenderContext(ContextSwitch[] switches) {
-		return LocalRenderContext.create(
-			maxBounds,
-			localRenderContext.getParentFontMetrics(),
-			switches);
+		return LocalRenderContext.create(maxBounds, switches);
 	}
 
 	private void addUnitToLine(RenderedUnit unit) {

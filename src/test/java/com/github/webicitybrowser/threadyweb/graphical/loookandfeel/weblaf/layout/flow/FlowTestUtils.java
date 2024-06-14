@@ -39,6 +39,7 @@ public class FlowTestUtils {
 		Mockito.when(renderContext.viewportSize()).thenReturn(new AbsoluteSize(1000, 1000));
 		Mockito.when(renderContext.resourceLoader()).thenReturn(resourceLoader);
 		Mockito.when(renderContext.renderCache()).thenReturn(renderCache);
+		Mockito.when(renderContext.rootFontMetrics()).thenReturn(new TestFontMetrics());
 
 		return renderContext;
 	}
@@ -48,18 +49,18 @@ public class FlowTestUtils {
 	}
 
 	public static LocalRenderContext createLocalRenderContext(AbsoluteSize size) {
-		return LocalRenderContext.create(size, testFont.getMetrics(), new ContextSwitch[0]);
+		return LocalRenderContext.create(size, new ContextSwitch[0]);
 	}
 
 	public static LocalRenderContext createLocalRenderContext(AbsoluteSize size, ContextSwitch[] switches) {
-		return LocalRenderContext.create(size, testFont.getMetrics(), switches);
+		return LocalRenderContext.create(size, switches);
 	}
 
 	public static FlowRenderContext createRenderContext(ChildrenBox box, GlobalRenderContext globalRenderContext, LocalRenderContext localRenderContext) {
 		FlowRootContextSwitch flowRootContextSwitch = new FlowRootContextSwitch(
 			AbsolutePosition.ZERO_POSITION,
 			new FloatContextImp(new FloatTrackerImp()));
-		for (ContextSwitch contextSwitch : localRenderContext.getContextSwitches()) {
+		for (ContextSwitch contextSwitch : localRenderContext.contextSwitches()) {
 			if (contextSwitch instanceof FlowRootContextSwitch) {
 				flowRootContextSwitch = (FlowRootContextSwitch) contextSwitch;
 			}

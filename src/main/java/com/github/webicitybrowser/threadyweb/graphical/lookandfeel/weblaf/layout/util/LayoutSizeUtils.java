@@ -12,6 +12,7 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.r
 import com.github.webicitybrowser.threadyweb.graphical.directive.BoxSizingDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.BoxSizingDirective.BoxSizing;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.util.BoxOffsetDimensions;
+import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.util.WebFontUtil;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.util.directive.WebSizeDirectiveUtil;
 import com.github.webicitybrowser.threadyweb.graphical.value.SizeCalculation;
 import com.github.webicitybrowser.threadyweb.graphical.value.SizeCalculation.SizeCalculationContext;
@@ -87,27 +88,24 @@ public final class LayoutSizeUtils {
 		return new AbsoluteSize(widthComponent, heightComponent);
 	}
 
-	public static SizeCalculationContext createSizeCalculationContext(LayoutManagerContext context, boolean isHorizontal) {
-		return createSizeCalculationContext(context, context.localRenderContext().getParentFontMetrics(), isHorizontal);
-	}
-
-	public static SizeCalculationContext createSizeCalculationContext(LayoutManagerContext context, FontMetrics parentFontMetrics, boolean isHorizontal) {
-		return createSizeCalculationContext(context.globalRenderContext(), context.localRenderContext(), parentFontMetrics, isHorizontal);
+	public static SizeCalculationContext createSizeCalculationContext(LayoutManagerContext context, DirectivePool directives, boolean isHorizontal) {
+		return createSizeCalculationContext(context.globalRenderContext(), context.localRenderContext(), directives, isHorizontal);
 	}
 
 	public static SizeCalculationContext createSizeCalculationContext(
-		GlobalRenderContext context, LocalRenderContext localRenderContext, boolean isHorizontal
+		GlobalRenderContext context, LocalRenderContext localRenderContext, DirectivePool parentDirectives, boolean isHorizontal
 	) {
-		return createSizeCalculationContext(context, localRenderContext, localRenderContext.getParentFontMetrics(), isHorizontal);
+		FontMetrics fontMetrics = WebFontUtil.getFont(parentDirectives, context).getMetrics();
+		return createSizeCalculationContext(context, localRenderContext, fontMetrics, isHorizontal);
 	}
 
-	public static SizeCalculationContext createSizeCalculationContext(
-		GlobalRenderContext context, LocalRenderContext localRenderContext, FontMetrics parentFontMetrics, boolean isHorizontal
+	private static SizeCalculationContext createSizeCalculationContext(
+		GlobalRenderContext context, LocalRenderContext localRenderContext, FontMetrics fontMetrics, boolean isHorizontal
 	) {
 		return new SizeCalculationContext(
-			localRenderContext.getPreferredSize(),
+			localRenderContext.preferredSize(),
 			context.viewportSize(),
-			parentFontMetrics,
+			fontMetrics,
 			context.rootFontMetrics(),
 			isHorizontal);
 	}

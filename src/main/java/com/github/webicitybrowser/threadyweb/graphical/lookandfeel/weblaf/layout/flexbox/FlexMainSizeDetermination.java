@@ -8,7 +8,6 @@ import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutManagerContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
-import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.flexbox.FlexDirectionDirective.FlexDirection;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.flexbox.FlexWrapDirective.FlexWrap;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flexbox.item.FlexItem;
@@ -45,7 +44,7 @@ public final class FlexMainSizeDetermination {
 	private static List<FlexLine> determineLinesWithMainSizesWrap(LayoutManagerContext layoutManagerContext, List<FlexItem> flexItems) {
 		DirectivePool layoutDirectives = layoutManagerContext.layoutDirectives();
 		FlexDirection flexDirection = FlexUtils.getFlexDirection(layoutDirectives);
-		AbsoluteSize preferredSize = layoutManagerContext.localRenderContext().getPreferredSize();
+		AbsoluteSize preferredSize = layoutManagerContext.localRenderContext().preferredSize();
 		for (FlexItem flexItem: flexItems) {
 			determineMainSize(layoutManagerContext, flexItem, FlexUtils.getFlexDirection(layoutDirectives));
 		}
@@ -75,7 +74,7 @@ public final class FlexMainSizeDetermination {
 	}
 
 	private static void setLineInitialMainSize(LayoutManagerContext layoutManagerContext, FlexLine flexLine, FlexDirection flexDirection) {
-		AbsoluteSize preferredSize = layoutManagerContext.localRenderContext().getPreferredSize();
+		AbsoluteSize preferredSize = layoutManagerContext.localRenderContext().preferredSize();
 		float mainSize = FlexDimension.createFrom(preferredSize, flexDirection).main();
 		if (mainSize != RelativeDimension.UNBOUNDED) {
 			flexLine.setMainSize(mainSize);
@@ -94,10 +93,8 @@ public final class FlexMainSizeDetermination {
 		}
 		
 		GlobalRenderContext globalRenderContext = layoutManagerContext.globalRenderContext();
-		LocalRenderContext localRenderContext = layoutManagerContext.localRenderContext();
 		FlexItemRenderer.FlexItemRenderContext flexItemRenderContext = new FlexItemRenderer.FlexItemRenderContext(
-			globalRenderContext, flexDirection, localRenderContext.getParentFontMetrics()
-		);
+			globalRenderContext, flexDirection);
 		AbsoluteSize fitSize = FlexItemRenderer.render(flexItem, flexItemRenderContext);
 		FlexDimension flexDimension = FlexDimension.createFrom(fitSize, flexDirection);
 		flexItem.setBaseSize(flexDimension.main());

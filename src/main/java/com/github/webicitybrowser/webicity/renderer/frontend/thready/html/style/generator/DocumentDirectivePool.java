@@ -1,6 +1,7 @@
 package com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.generator;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import com.github.webicitybrowser.spec.css.parser.TokenLike;
 import com.github.webicitybrowser.spec.css.rule.Declaration;
@@ -46,6 +47,11 @@ public class DocumentDirectivePool implements DirectivePool {
 		}
 
 		return result;
+	}
+
+	@Override
+	public <T extends Directive> T derive(Class<T> directiveClass, BiFunction<DirectivePool, DirectivePool, T> deriveFunction) {
+		return deriveFunction.apply(this, parentPool);
 	}
 
 	@Override

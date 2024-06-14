@@ -1,6 +1,7 @@
 package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flexbox;
 
 import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
+import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
@@ -9,6 +10,7 @@ import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.M
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.MarginDirective.LeftMarginDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.MarginDirective.RightMarginDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.MarginDirective.TopMarginDirective;
+import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.util.LayoutSizeUtils;
 import com.github.webicitybrowser.threadyweb.graphical.value.SizeCalculation;
 import com.github.webicitybrowser.threadyweb.graphical.value.SizeCalculation.SizeCalculationContext;
 
@@ -40,8 +42,8 @@ public final class FlexMarginCalculations {
 		GlobalRenderContext globalRenderContext, LocalRenderContext localRenderContext,
 		Box box, Class<?  extends MarginDirective> directiveClass, float defaultValue
 	) {
-		SizeCalculation sizeCalculation = box
-			.styleDirectives()
+		DirectivePool directives = box.styleDirectives();
+		SizeCalculation sizeCalculation = directives
 			.getDirectiveOrEmpty(directiveClass)
 			.map(directive -> directive.getSizeCalculation())
 			.orElse(_1 -> 0);
@@ -50,7 +52,7 @@ public final class FlexMarginCalculations {
 			return defaultValue;
 		}
 
-		SizeCalculationContext sizeCalculationContext = FlexUtils.createSizeCalculationContext(globalRenderContext, localRenderContext, true);
+		SizeCalculationContext sizeCalculationContext = LayoutSizeUtils.createSizeCalculationContext(globalRenderContext, localRenderContext, directives, true);
 		return sizeCalculation.calculate(sizeCalculationContext);
 	}
 

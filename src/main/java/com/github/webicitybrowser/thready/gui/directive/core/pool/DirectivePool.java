@@ -1,6 +1,7 @@
 package com.github.webicitybrowser.thready.gui.directive.core.pool;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import com.github.webicitybrowser.thready.gui.directive.core.Directive;
 
@@ -34,6 +35,8 @@ public interface DirectivePool {
 	 *  or empty if the directive has not been set or inherited.
 	 */
 	<T extends Directive> Optional<T> inheritDirectiveOrEmpty(Class<T> directiveClass);
+
+	<T extends Directive> T derive(Class<T> directiveClass, BiFunction<DirectivePool, DirectivePool, T> deriveFunction);
 	
 	void addEventListener(DirectivePoolListener listener);
 	

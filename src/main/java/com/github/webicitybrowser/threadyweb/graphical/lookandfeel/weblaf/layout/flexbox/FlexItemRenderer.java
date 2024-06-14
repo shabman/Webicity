@@ -2,7 +2,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
 import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
-import com.github.webicitybrowser.thready.drawing.core.text.FontMetrics;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIPipeline;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
@@ -19,10 +18,7 @@ public final class FlexItemRenderer {
 
 	public static AbsoluteSize render(FlexItem flexItem, FlexItemRenderContext flexItemRenderContext) {
 		AbsoluteSize adjustedPreferredSize = getAdjustedPreferredSize(flexItem, flexItemRenderContext);
-		
-		LocalRenderContext itemLocalRenderContext = LocalRenderContext.create(
-			adjustedPreferredSize, flexItemRenderContext.parentFontMetrics(), new ContextSwitch[0]
-		);
+		LocalRenderContext itemLocalRenderContext = LocalRenderContext.create(adjustedPreferredSize, new ContextSwitch[0]);
 
 		RenderedUnit unit = UIPipeline.render(flexItem.getBox(), flexItemRenderContext.globalRenderContext(), itemLocalRenderContext);
 		flexItem.setRenderedUnit(unit);
@@ -54,8 +50,6 @@ public final class FlexItemRenderer {
 		return fitSize;
 	}
 
-	public static record FlexItemRenderContext(
-		GlobalRenderContext globalRenderContext, FlexDirection flexDirection, FontMetrics parentFontMetrics
-	) {}
+	public static record FlexItemRenderContext(GlobalRenderContext globalRenderContext, FlexDirection flexDirection) {}
 
 }

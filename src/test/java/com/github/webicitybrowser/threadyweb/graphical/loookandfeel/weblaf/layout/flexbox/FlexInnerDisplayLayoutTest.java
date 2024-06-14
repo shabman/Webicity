@@ -426,6 +426,7 @@ public class FlexInnerDisplayLayoutTest {
 		Mockito.when(renderContext.viewportSize()).thenReturn(new AbsoluteSize(1000, 5000));
 		Mockito.when(renderContext.resourceLoader()).thenReturn(resourceLoader);
 		Mockito.when(renderContext.renderCache()).thenReturn(renderCache);
+		Mockito.when(renderContext.rootFontMetrics()).thenReturn(new TestFontMetrics());
 
 		return renderContext;
 	}
@@ -435,7 +436,7 @@ public class FlexInnerDisplayLayoutTest {
 	}
 
 	private LocalRenderContext createLocalRenderContext(AbsoluteSize sizeOverride) {
-		return LocalRenderContext.create(sizeOverride, testFont.getMetrics(), new ContextSwitch[0]);
+		return LocalRenderContext.create(sizeOverride, new ContextSwitch[0]);
 	}
 
 	private Font2D createTestFont() {

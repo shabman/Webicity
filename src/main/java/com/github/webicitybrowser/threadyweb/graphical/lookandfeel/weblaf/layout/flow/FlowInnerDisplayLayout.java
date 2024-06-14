@@ -42,7 +42,7 @@ public class FlowInnerDisplayLayout implements SolidLayoutManager {
 	}
 
 	private FlowRootContextSwitch getFlowRootContextSwitch(LocalRenderContext localRenderContext) {
-		for (ContextSwitch contextSwitch: localRenderContext.getContextSwitches()) {
+		for (ContextSwitch contextSwitch: localRenderContext.contextSwitches()) {
 			if (contextSwitch instanceof FlowRootContextSwitch flowRootContextSwitch) {
 				return flowRootContextSwitch;
 			}

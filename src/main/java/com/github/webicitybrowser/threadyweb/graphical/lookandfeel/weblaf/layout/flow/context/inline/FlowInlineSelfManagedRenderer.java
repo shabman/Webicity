@@ -3,8 +3,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 import java.util.function.Function;
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
-import com.github.webicitybrowser.thready.drawing.core.text.Font2D;
-import com.github.webicitybrowser.thready.drawing.core.text.FontMetrics;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIPipeline;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
@@ -25,9 +23,8 @@ public final class FlowInlineSelfManagedRenderer {
 	private FlowInlineSelfManagedRenderer() {}
 
 	public static void addSelfManagedBoxToLine(FlowInlineRendererState state, Box childBox) {
-		FontMetrics fontMetrics = state.getFontStack().peek().getMetrics();
 		Function<Boolean, SizeCalculationContext> sizeCalculationContextGenerator = 
-			isHorizontal -> LayoutSizeUtils.createSizeCalculationContext(state.flowContext().layoutManagerContext(), fontMetrics, isHorizontal);
+			isHorizontal -> LayoutSizeUtils.createSizeCalculationContext(state.flowContext().layoutManagerContext(), childBox.styleDirectives(), isHorizontal);
 		SizeCalculationContext sizeCalculationContext = sizeCalculationContextGenerator.apply(true);
 		BoxOffsetDimensions boxOffsetDimensions = getBoxOffsetDimensions(childBox, sizeCalculationContext);
 		AbsoluteSize preferredSize = computePreferredSize(sizeCalculationContextGenerator, childBox, boxOffsetDimensions);
@@ -61,13 +58,8 @@ public final class FlowInlineSelfManagedRenderer {
 
 	private static RenderedUnit renderChildUnit(FlowInlineRendererState state, Box childBox, AbsoluteSize contentSize) {
 		GlobalRenderContext globalRenderContext = state.getGlobalRenderContext();
-		LocalRenderContext childLocalRenderContext = createChildLocalRenderContext(state, childBox, contentSize);
+		LocalRenderContext childLocalRenderContext = new LocalRenderContext(contentSize, new ContextSwitch[0]);
 		return UIPipeline.render(childBox, globalRenderContext, childLocalRenderContext);
-	}
-
-	private static LocalRenderContext createChildLocalRenderContext(FlowInlineRendererState state, Box childBox, AbsoluteSize contentSize) {
-		Font2D lastFont = state.getFontStack().peek();
-		return LocalRenderContext.create(contentSize, lastFont.getMetrics(), new ContextSwitch[0]);
 	}
 
 }

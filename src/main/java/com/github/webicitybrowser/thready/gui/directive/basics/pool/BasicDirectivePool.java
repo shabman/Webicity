@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import com.github.webicitybrowser.performance.LazyMap;
 import com.github.webicitybrowser.thready.gui.directive.core.Directive;
@@ -42,6 +43,11 @@ public class BasicDirectivePool implements DirectivePool {
 	}
 
 	@Override
+	public <T extends Directive> T derive(Class<T> directiveClass, BiFunction<DirectivePool, DirectivePool, T> deriveFunction) {
+		return deriveFunction.apply(this, null);
+	}
+
+	@Override
 	public void addEventListener(DirectivePoolListener listener) {
 		listeners.add(listener);
 	}
@@ -60,7 +66,7 @@ public class BasicDirectivePool implements DirectivePool {
 	private static class LazyNormalHashMap<K, V> extends LazyMap<K, V> {
 		@Override
 		protected Map<K, V> initialize() {
-			return new HashMap<>(1);
+			return new HashMap<>(2);
 		}
 	}
 	

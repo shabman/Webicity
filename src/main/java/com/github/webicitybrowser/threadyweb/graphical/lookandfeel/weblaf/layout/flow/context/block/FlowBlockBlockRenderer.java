@@ -21,7 +21,7 @@ public final class FlowBlockBlockRenderer {
 
 	public static void renderChild(FlowBlockRendererState state, Box childBox) {
 		BoxOffsetDimensions boxDimensions = BoxOffsetDimensions.create(state, childBox);
-		AbsoluteSize parentSize = state.getLocalRenderContext().getPreferredSize();
+		AbsoluteSize parentSize = state.getLocalRenderContext().preferredSize();
 		FlowBlockUnitRenderingContext context = new FlowBlockUnitRenderingContext(
 			state, childBox, boxDimensions,
 			FlowBlockBlockRenderer::createChildLocalRenderContext,
@@ -101,9 +101,7 @@ public final class FlowBlockBlockRenderer {
 		FlowRootContextSwitch childSwitch = new FlowRootContextSwitch(
 			offsetPredictedChildPosition, parentSwitch.floatContext());
 
-		return LocalRenderContext.create(childSize, state.getFont().getMetrics(), new ContextSwitch[] {
-			childSwitch
-		});
+		return LocalRenderContext.create(childSize, new ContextSwitch[] { childSwitch });
 	}
 
 }

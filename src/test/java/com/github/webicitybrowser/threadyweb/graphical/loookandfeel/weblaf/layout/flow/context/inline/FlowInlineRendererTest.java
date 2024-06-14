@@ -372,6 +372,7 @@ public class FlowInlineRendererTest {
 			BreakBox breakBox = Mockito.mock(BreakBox.class);
 			Mockito.when(breakBox.getAdjustedBoxTree()).thenReturn(List.of(breakBox));
 			Mockito.when(breakBox.isFluid()).thenReturn(true);
+			Mockito.when(breakBox.styleDirectives()).thenReturn(emptyDirectivePool);
 			box.getChildrenTracker().addChild(breakBox);
 		}
 		TextBox textBox2 = FlowTestUtils.createTextBox("World");

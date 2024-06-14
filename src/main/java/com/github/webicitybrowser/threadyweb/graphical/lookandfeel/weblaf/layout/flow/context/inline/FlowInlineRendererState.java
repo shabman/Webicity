@@ -1,8 +1,5 @@
 package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.inline;
 
-import java.util.Stack;
-
-import com.github.webicitybrowser.thready.drawing.core.text.Font2D;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.GlobalRenderContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
@@ -17,7 +14,6 @@ public class FlowInlineRendererState {
 	private final LineContext lineContext;
 
 	private final TextConsolidation textConsolidation = TextConsolidation.create();
-	private final Stack<Font2D> fontStack = new Stack<>();
 
 	public FlowInlineRendererState(LineDirection lineDirection, FlowRenderContext context) {
 		this.lineContext = new LineContext(lineDirection, context);
@@ -47,10 +43,6 @@ public class FlowInlineRendererState {
 
 	public TextConsolidation getTextConsolidation() {
 		return textConsolidation;
-	}
-
-	public Stack<Font2D> getFontStack() {
-		return fontStack;
 	}
 
 }
