@@ -1,5 +1,6 @@
 package com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.generator;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -11,7 +12,6 @@ import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePoolL
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMPropertyResolver;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMPropertyResolver.CSSOMPropertyResolverFilter;
 import com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.cssbinding.CSSOMDeclarationParser;
-import com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.cssbinding.CSSOMNamedDeclarationParser;
 
 public class DocumentDirectivePool implements DirectivePool {
 
@@ -73,15 +73,16 @@ public class DocumentDirectivePool implements DirectivePool {
 	private class DocumentPropertyResolverFilter<T> implements CSSOMPropertyResolverFilter<T> {
 
 		private final Class<? extends Directive> directiveClass;
+		private final List<String> directivePropertyNames;
 
 		public DocumentPropertyResolverFilter(Class<? extends Directive> directiveClass) {
 			this.directiveClass = directiveClass;
+			this.directivePropertyNames = declarationParser.getDirectivePropertyNames(directiveClass);
 		}
 
 		@Override
 		public boolean isApplicable(Declaration propertyValue) {
-			CSSOMNamedDeclarationParser<?> namedParser = declarationParser.getNamedDeclarationParser(propertyValue.getName());
-			return namedParser != null && namedParser.getResultantDirectiveClasses().contains(directiveClass);
+			return directivePropertyNames.contains(propertyValue.getName());
 		}
 
 		@Override
@@ -89,7 +90,7 @@ public class DocumentDirectivePool implements DirectivePool {
 		public Optional<T> filter(String name, TokenLike[] tokens) {
 			Directive[] results = declarationParser.parseDeclaration(name, tokens);
 			for (Directive result: results) {
-				if (directiveClass.isInstance(result)) {
+				if (result.getPrimaryType() == directiveClass) {
 					return Optional.of((T) result);
 				}
 			}

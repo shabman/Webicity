@@ -21,13 +21,15 @@ public class SkijaFont2DImp implements SkijaFont2D {
 
 	private static final FontMgr manager = FontMgr.getDefault();
 	
+	private final FontSettings fontSettings;
 	private final Font[] fallbackFonts;
 	private final FontMetrics metrics;
 	
 	private final short[] glyphCache = new short[256];
 	private final Font[] effectiveFontCache = new Font[256];
 
-	public SkijaFont2DImp(Font[] fallbackFonts, FontMetrics metrics) {
+	public SkijaFont2DImp(FontSettings fontSettings, Font[] fallbackFonts, FontMetrics metrics) {
+		this.fontSettings = fontSettings;
 		this.fallbackFonts = fallbackFonts;
 		this.metrics = metrics;
 	}
@@ -35,6 +37,11 @@ public class SkijaFont2DImp implements SkijaFont2D {
 	@Override
 	public FontMetrics getMetrics() {
 		return this.metrics;
+	}
+
+	@Override
+	public FontSettings getSettings() {
+		return this.fontSettings;
 	}
 
 	public Font getEffectiveFont(int codePoint) {
@@ -75,7 +82,7 @@ public class SkijaFont2DImp implements SkijaFont2D {
 		Font[] fonts = loadFonts(settings);
 		FontMetrics metrics = new SkijaFontMetricsImp(fonts, settings);
 		
-		return new SkijaFont2DImp(fonts, metrics);
+		return new SkijaFont2DImp(settings, fonts, metrics);
 	}
 
 	private static Font[] loadFonts(FontSettings settings) {

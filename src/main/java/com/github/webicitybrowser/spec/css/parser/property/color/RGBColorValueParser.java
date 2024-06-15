@@ -96,9 +96,9 @@ public class RGBColorValueParser implements PropertyValueParser<ColorValue> {
 	}
 
 	private float parseAlphaComponent(TokenLike component) {
-		if (component instanceof NumberToken numberToken) {
+		if (component instanceof NumberToken) {
 			return parseNumberComponent(component, 1) * 255;
-		} else if (component instanceof PercentageToken percentageToken) {
+		} else if (component instanceof PercentageToken) {
 			return parsePercentageComponent(component);
 		} else {
 			return -1;

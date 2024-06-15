@@ -88,7 +88,7 @@ public class ComplexSelectorParser {
 
 	private ComplexSelectorPart consumeSimpleSelector(TokenStream stream) throws ParseFormatException {
 		TokenLike token = stream.peek();
-		if (token instanceof IdentToken identToken) {
+		if (token instanceof IdentToken) {
 			return typeSelectorParser.parse(stream);
 		} else if (isDelimiterToken(token, '.')) {
 			return classSelectorParser.parse(stream);

@@ -11,4 +11,10 @@ public interface Font2D {
 	 */
 	FontMetrics getMetrics();
 
+	/**
+	 * Get the font settings that this font was loaded with.
+	 * @return The font settings.
+	 */
+	FontSettings getSettings();
+
 }

@@ -1,7 +1,7 @@
 package com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.generator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class DocumentDirectivePoolCache {
 
 	public void put(Class<? extends Directive> key, Optional<? extends Directive> value) {
 		if (valueMappings == null && value.isPresent()) {
-			valueMappings = new HashMap<>(1);
+			valueMappings = new IdentityHashMap<>(1);
 		} else if (nullKeys == null && value.isEmpty()) {
 			nullKeys = new ArrayList<>(4);
 		}

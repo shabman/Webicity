@@ -1,6 +1,5 @@
 package com.github.webicitybrowser.thready.drawing.core.text;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 import com.github.webicitybrowser.thready.drawing.core.text.source.FontSource;
@@ -22,22 +21,20 @@ public record FontSettings(FontSource[] fontSources, float fontSize, int fontWei
 	
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof FontSettings)) {
-			return false;
+		if (o instanceof FontSettings other) {
+			return
+				arrayEquals(fontSources, other.fontSources) &&
+				other.fontSize() == fontSize &&
+				other.fontWeight() == fontWeight &&
+				arrayEquals(other.fontDecorations(), fontDecorations);
 		}
-		
-		FontSettings other = (FontSettings) o;
-		return
-			arrayEquals(fontSources, other.fontSources) &&
-			other.fontSize() == fontSize &&
-			other.fontWeight() == fontWeight &&
-			Arrays.compare(other.fontDecorations(), fontDecorations) == 0;
+
+		return false;
 	}
 
 	private boolean arrayEquals(Object[] array1 , Object[] array2) {
-		if (array1.length != array2.length) {
-			return false;
-		}
+		if (array1 == array2) return true;
+		if (array1.length != array2.length) return false;
 
 		for (int i = 0; i < array1.length; i++) {
 			if (!array1[i].equals(array2[i])) {

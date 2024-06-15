@@ -1,6 +1,8 @@
 package com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.cssbinding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,6 +33,7 @@ public class CSSOMDeclarationParserImp implements CSSOMDeclarationParser {
 	private static final Directive[] EMPTY_DIRECTIVE_ARRAY = new Directive[0];
 	
 	private final Map<String, CSSOMNamedDeclarationParser<?>> namedDeclarationParsers = new HashMap<>();
+	private final Map<Class<? extends Directive>, List<String>> directivePropertyNames = new HashMap<>();
 	
 	public CSSOMDeclarationParserImp() {
 		namedDeclarationParsers.put("display", new CSSOMDisplayDeclarationParser());
@@ -49,8 +52,10 @@ public class CSSOMDeclarationParserImp implements CSSOMDeclarationParser {
 		CSSOMMarginBindings.installTo(namedDeclarationParsers);
 		CSSOMPositionBindings.installTo(namedDeclarationParsers);
 		CSSOMFlowBindings.installTo(namedDeclarationParsers);
+
+		generateDirectivePropertyNameMap();
 	}
-	
+
 	@Override
 	public Directive[] parseDeclaration(String name, TokenLike[] tokens) {
 		CSSOMNamedDeclarationParser<?> namedParser = namedDeclarationParsers.get(name);
@@ -65,6 +70,22 @@ public class CSSOMDeclarationParserImp implements CSSOMDeclarationParser {
 	@Override
 	public CSSOMNamedDeclarationParser<?> getNamedDeclarationParser(String propertyName) {
 		return namedDeclarationParsers.get(propertyName);
+	}
+
+	@Override
+	public List<String> getDirectivePropertyNames(Class<? extends Directive> directiveClass) {
+		return directivePropertyNames.getOrDefault(directiveClass, List.of());	
+	}
+
+	private void generateDirectivePropertyNameMap() {
+		for (Map.Entry<String, CSSOMNamedDeclarationParser<?>> entry : namedDeclarationParsers.entrySet()) {
+			CSSOMNamedDeclarationParser<?> parser = entry.getValue();
+			for (Class<? extends Directive> directiveClass : parser.getResultantDirectiveClasses()) {
+				directivePropertyNames
+					.computeIfAbsent(directiveClass, _1 -> new ArrayList<>(1))
+					.add(entry.getKey());
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
