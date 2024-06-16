@@ -3,6 +3,7 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
+import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
 import com.github.webicitybrowser.thready.drawing.core.text.Font2D;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.ChildrenBox;
@@ -54,7 +55,8 @@ public final class FlowInlineTextRenderer {
 		LineContext lineContext = state.lineContext();
 		boolean forceFit = lineContext.currentLine().isEmpty();
 		LineBox currentLine = lineContext.currentLine();
-		float remainingRun = currentLine.getMaxLineSize().run() - currentLine.getSize().width();
+		float maxRun = currentLine.getMaxLineSize().run();
+		float remainingRun = maxRun == RelativeDimension.UNBOUNDED ? maxRun : maxRun - currentLine.getSize().width();
 		String text = splitter.getFittingText(forceFit, remainingRun);
 		if (text == null) {
 			FlowInlineRendererUtil.startNewLine(state);

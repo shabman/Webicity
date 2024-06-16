@@ -6,6 +6,7 @@ import com.github.webicitybrowser.spec.dom.node.Node;
 import com.github.webicitybrowser.spec.dom.node.Text;
 import com.github.webicitybrowser.spec.infra.Namespace;
 import com.github.webicitybrowser.threadyweb.context.WebComponentContext;
+import com.github.webicitybrowser.threadyweb.tree.BreakComponent;
 import com.github.webicitybrowser.threadyweb.tree.ElementComponent;
 import com.github.webicitybrowser.threadyweb.tree.WebComponent;
 import com.github.webicitybrowser.threadyweb.tree.image.ImageComponent;
@@ -34,6 +35,7 @@ public final class WebComponentFactory {
 	private static WebComponent createComponentForElement(Element element, WebComponentContext componentContext) {
 		return switch (element.getLocalName()) {
 			case "img" -> ImageComponent.create(element, componentContext);
+			case "br" -> BreakComponent.create(element, componentContext);
 			default -> ElementComponent.create(element, componentContext);
 		};
 	}

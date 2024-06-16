@@ -17,7 +17,7 @@ public final class FlowBlockSizeCalculations {
 		AbsoluteSize outerSize = LayoutSizeUtils.addPadding(contentSize, paddings);
 		AbsoluteSize clippedOuterSize = new AbsoluteSize(
 			clipWidth(childStyles, outerSize.width(), layoutSizingContext),
-			clipHeight(childStyles, outerSize.height(), layoutSizingContext, false)
+			clipHeight(childStyles, outerSize.height(), layoutSizingContext)
 		);
 		AbsoluteSize clippedContentSize = LayoutSizeUtils.subtractPadding(clippedOuterSize, paddings);
 
@@ -38,7 +38,7 @@ public final class FlowBlockSizeCalculations {
 		return width;
 	}
 
-	public static float clipHeight(DirectivePool childStyles, float height, LayoutSizingContext layoutSizingContext, boolean minimize) {
+	public static float clipHeight(DirectivePool childStyles, float height, LayoutSizingContext layoutSizingContext) {
 		float minHeight = LayoutSizeUtils.computeMinHeight(childStyles, layoutSizingContext);
 		float maxHeight = LayoutSizeUtils.computeMaxHeight(childStyles, layoutSizingContext);
 

@@ -28,7 +28,7 @@ public class LineCursorTracker implements CursorTracker {
 	@Override
 	public boolean addWillOverflowLine(AbsoluteSize unitSize, LineDimension lineSize) {
 		LineDimension unitLineSize = LineDimensionConverter.convertToLineDimension(unitSize, lineDirection);
-		if (unitLineSize.run() == RelativeDimension.UNBOUNDED) {
+		if (lineSize.run() == RelativeDimension.UNBOUNDED) {
 			return false;
 		}
 		return lineSizeCoveredAfterAdd(unitLineSize).run() > lineSize.run();

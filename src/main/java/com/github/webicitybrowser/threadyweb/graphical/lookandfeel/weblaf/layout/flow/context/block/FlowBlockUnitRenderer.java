@@ -35,18 +35,21 @@ public final class FlowBlockUnitRenderer {
 	}
 
 	public static FlowBlockChildRenderResult generateChildUnit(FlowBlockUnitRenderingContext context, FlowBlockPrerenderSizingInfo prerenderSizingInfo) {
+		// If the size is determinate, we just use that size (but clipped to constraints)
+		// If not, take the fit size and clip it to constraints
 		Box childBox = context.childBox();
 		AbsoluteSize precomputedSize = prerenderSizingInfo.precomputedChildSize();
-		RenderedUnit childUnit = renderChildUnit(context, prerenderSizingInfo);
-		AbsoluteSize adjustedSize = FlowSizeUtils.enforcePreferredSize(childUnit.fitSize(), prerenderSizingInfo.enforcedChildSize());
-		precomputedSize = FlowBlockSizeCalculations.clipContentSize(childBox.styleDirectives(), adjustedSize, prerenderSizingInfo);
+		// TODO: clipContentSize is actually meant to be called on the fit-content size if the size is not determinate
+		// However, I need to make the proper infrastructure to allow determining the fit-content size
+		precomputedSize = FlowBlockSizeCalculations.clipContentSize(childBox.styleDirectives(), precomputedSize, prerenderSizingInfo);
 		FlowBlockPrerenderSizingInfo adjustedPrerenderSizingInfo = new FlowBlockPrerenderSizingInfo(
 			prerenderSizingInfo.enforcedChildSize(), precomputedSize, prerenderSizingInfo.parentSize(), prerenderSizingInfo.sizingContext()
 		);
-		RenderedUnit unit = renderChildUnit(context, adjustedPrerenderSizingInfo);
-		adjustedSize = FlowSizeUtils.enforcePreferredSize(unit.fitSize(), precomputedSize);
+		RenderedUnit childUnit = renderChildUnit(context, adjustedPrerenderSizingInfo);
+		AbsoluteSize adjustedSize = FlowSizeUtils.enforcePreferredSize(childUnit.fitSize(), prerenderSizingInfo.enforcedChildSize());
+		AbsoluteSize clippedAdjustedSize = FlowBlockSizeCalculations.clipContentSize(childBox.styleDirectives(), adjustedSize, prerenderSizingInfo);
 
-		return new FlowBlockChildRenderResult(unit, adjustedSize);
+		return new FlowBlockChildRenderResult(childUnit, clippedAdjustedSize);
 	}
 
 	private static LayoutSizingContext createLayoutSizingContext(FlowBlockRendererState state, Box childBox, BoxOffsetDimensions boxOffsetDimensions) {
