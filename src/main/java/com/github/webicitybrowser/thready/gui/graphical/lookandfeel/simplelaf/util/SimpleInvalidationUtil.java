@@ -13,7 +13,7 @@ public final class SimpleInvalidationUtil {
 		if (directive instanceof GraphicalDirective graphicalDirective) {
 			return graphicalDirective.getInvalidationLevel();
 		} else if (directive.getPrimaryType() == ChildrenDirective.class) {
-			return InvalidationLevel.BOX;
+			return InvalidationLevel.STYLE;
 		} else {
 			return InvalidationLevel.NONE;
 		}

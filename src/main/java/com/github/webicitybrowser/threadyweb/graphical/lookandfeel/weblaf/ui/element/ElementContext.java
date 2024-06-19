@@ -1,25 +1,26 @@
 package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.ui.element;
 
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
+import java.util.List;
+
+import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.thready.gui.graphical.cache.MappingCache;
 import com.github.webicitybrowser.thready.gui.graphical.cache.imp.MappingCacheImp;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.LookAndFeel;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
-import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.context.ChildrenContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.context.Context;
+import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.style.StyleContext;
 import com.github.webicitybrowser.thready.gui.tree.core.Component;
 import com.github.webicitybrowser.threadyweb.tree.ElementComponent;
-import com.github.webicitybrowser.threadyweb.tree.WebComponent;
 
-public class ElementContext implements ChildrenContext {
+public class ElementContext implements Context {
 
-	private final MappingCache<Component, Context> childCache = new MappingCacheImp<>(
-		Context[]::new,
-		context -> context.componentUI().getComponent());
+	private final MappingCache<Component, Context> childCache = new MappingCacheImp<>(context -> context.componentUI().getComponent());
 	
 	private final UIDisplay<?, ?, ElementUnit> display;
 	private final ComponentUI componentUI;
+
+	private DirectivePool styleDirectives;
 
 	public ElementContext(UIDisplay<?, ?, ElementUnit> display, ComponentUI componentUI) {
 		this.display = display;
@@ -37,19 +38,19 @@ public class ElementContext implements ChildrenContext {
 	}
 
 	@Override
-	public Context[] children(LookAndFeel lookAndFeel) {
-		updateChildMapping(lookAndFeel);
-
+	public List<Context> children() {
 		return childCache.getComputedMappings();
+	}
+	
+	@Override
+	public DirectivePool styleDirectives() {
+		return styleDirectives;
 	}
 
 	@Override
-	public StyleGenerator[] childrenStyleGenerators(StyleGenerator styleGenerator, Context[] contexts) {
-		ComponentUI[] childUIs = new ComponentUI[contexts.length];
-		for (int i = 0; i < contexts.length; i++) {
-			childUIs[i] = contexts[i].componentUI();
-		}
-		return styleGenerator.createChildStyleGenerators(childUIs);
+	public void regenerateStyling(DirectivePool styleDirectives, StyleContext styleContext) {
+		this.styleDirectives = styleDirectives;
+		updateChildMapping(styleContext.lookAndFeel());
 	}
 
 	public Component component() {
@@ -62,7 +63,7 @@ public class ElementContext implements ChildrenContext {
 			component -> createUIContext(component, lookAndFeel));
 	}
 
-	private WebComponent[] getChildren() {
+	private List<Component> getChildren() {
 		return ((ElementComponent) component()).getChildren();
 	}
 

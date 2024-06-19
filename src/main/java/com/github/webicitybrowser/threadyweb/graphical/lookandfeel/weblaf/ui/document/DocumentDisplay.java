@@ -3,7 +3,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.ui.do
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutManagerContext;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutResult;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.SolidLayoutManager;
@@ -43,8 +42,8 @@ public class DocumentDisplay implements UIDisplay<DocumentContext, ChildrenBox, 
 	}
 
 	@Override
-	public List<ChildrenBox> generateBoxes(DocumentContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		return DocumentBoxGenerator.generateBoxes(displayContext, boxContext, styleGenerator);
+	public List<ChildrenBox> generateBoxes(DocumentContext displayContext, BoxContext boxContext) {
+		return DocumentBoxGenerator.generateBoxes(displayContext, boxContext);
 	}
 
 	@Override

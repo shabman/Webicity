@@ -19,7 +19,7 @@ public final class ContentPainter {
 
 	public static void performPaintCycle(ScreenContentRedrawContext redrawContext, List<CompositeLayer> compositeLayers) {
 		clearPaint(redrawContext);
-		paintCompsiteLayers(redrawContext, compositeLayers);
+		paintCompositeLayers(redrawContext, compositeLayers);
 	}
 
 	private static void clearPaint(ScreenContentRedrawContext redrawContext) {
@@ -30,7 +30,7 @@ public final class ContentPainter {
 		canvas.drawRect(0, 0, contentSize.width(), contentSize.height());
 	}
 
-	private static void paintCompsiteLayers(ScreenContentRedrawContext redrawContext, List<CompositeLayer> compositeLayers) {
+	private static void paintCompositeLayers(ScreenContentRedrawContext redrawContext, List<CompositeLayer> compositeLayers) {
 		Canvas2D rootCanvas = createRootCanvas(redrawContext);
 
 		Stack<LayerData> layerDataStack = new Stack<>();

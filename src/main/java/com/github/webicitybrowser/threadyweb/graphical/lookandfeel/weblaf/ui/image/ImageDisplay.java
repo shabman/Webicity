@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.base.InvalidationLevel;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
@@ -34,9 +33,9 @@ public class ImageDisplay implements UIDisplay<ImageContext, ImageBox, ImageUnit
 	}
 
 	@Override
-	public List<ImageBox> generateBoxes(ImageContext displayContext, BoxContext boxContext,StyleGenerator styleGenerator) {
+	public List<ImageBox> generateBoxes(ImageContext displayContext, BoxContext boxContext) {
 		ImageComponent component = (ImageComponent) displayContext.componentUI().getComponent();
-		DirectivePool directives = styleGenerator.getStyleDirectives();
+		DirectivePool directives = displayContext.styleDirectives();
 		return List.of(new ImageBox(this, component, directives));
 	}
 

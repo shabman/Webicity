@@ -46,7 +46,7 @@ public class OneOneStyleGenerator implements StyleGenerator {
 		return new DirectivePoolListener() {
 			@Override
 			public void onMassChange() {
-				componentUI.invalidate(InvalidationLevel.BOX);
+				componentUI.invalidate(InvalidationLevel.STYLE);
 			}
 			
 			@Override
@@ -55,7 +55,7 @@ public class OneOneStyleGenerator implements StyleGenerator {
 				if (directive instanceof GraphicalDirective graphicalDirective) {
 					componentUI.invalidate(graphicalDirective.getInvalidationLevel());
 				} else if (directive instanceof ChildrenDirective) {
-					componentUI.invalidate(InvalidationLevel.BOX);
+					componentUI.invalidate(InvalidationLevel.STYLE);
 				}
 			}
 		};

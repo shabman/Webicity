@@ -37,7 +37,7 @@ public class FrameRendererChangeHandler {
 		if (content == null) return;
 		content.onRedrawRequest(() -> componentUI.invalidate(InvalidationLevel.PAINT));
 		screenContentChangeListener.accept(content);
-		componentUI.invalidate(InvalidationLevel.BOX);
+		componentUI.invalidate(InvalidationLevel.STYLE);
 	}
 	
 	private static ScreenContent bindRenderer(RendererHandle rendererHandle) {

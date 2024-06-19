@@ -13,7 +13,6 @@ import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerato
 import com.github.webicitybrowser.thready.gui.graphical.base.GUIContent;
 import com.github.webicitybrowser.thready.gui.graphical.base.InvalidationLevel;
 import com.github.webicitybrowser.thready.gui.graphical.base.imp.message.ContentMessageHandler;
-import com.github.webicitybrowser.thready.gui.graphical.base.imp.stage.box.BoxContextImp;
 import com.github.webicitybrowser.thready.gui.graphical.base.imp.stage.composite.ContentCompositor;
 import com.github.webicitybrowser.thready.gui.graphical.base.imp.stage.paint.ContentPainter;
 import com.github.webicitybrowser.thready.gui.graphical.base.imp.stage.render.RenderCacheImp;
@@ -29,6 +28,7 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.r
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.LocalRenderContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.unit.ContextSwitch;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.render.unit.RenderedUnit;
+import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.style.StyleContext;
 import com.github.webicitybrowser.thready.gui.tree.core.Component;
 import com.github.webicitybrowser.thready.windowing.core.event.ScreenEvent;
 
@@ -45,7 +45,7 @@ public class GUIContentImp implements GUIContent {
 	
 	private Runnable redrawRequestHandler;
 	private AbsoluteSize oldContentSize;
-	private Object rootContext;
+	private Context rootContext;
 	private Box rootBox;
 	private List<CompositeLayer> compositeLayers;
 	private RenderedUnit rootUnit;
@@ -55,7 +55,7 @@ public class GUIContentImp implements GUIContent {
 		this.rootUI = createRootUI(configuration.component(), configuration.lookAndFeel());
 		this.rootContext = rootUI.getRootDisplay().createContext(rootUI);
 		this.configuration = configuration;
-		this.invalidationLevel = InvalidationLevel.BOX;
+		this.invalidationLevel = InvalidationLevel.STYLE;
 
 		if (redrawRequestHandler != null) {
 			redrawRequestHandler.run();
@@ -104,16 +104,15 @@ public class GUIContentImp implements GUIContent {
 	}
 
 	private void performRenderPipeline(ScreenContentRedrawContext redrawContext) {
-		if (invalidationLevel == InvalidationLevel.BOX) {
-			performBoxCycle();
-		}
-		
-		if (this.rootBox == null) {
+		if (invalidationLevel.compareTo(InvalidationLevel.STYLE) > 0 && rootBox == null) {
 			return;
 		}
 		
 		switch (invalidationLevel) {
+		case STYLE:
+			performStyleCycle();
 		case BOX:
+			performBoxCycle();
 		case RENDER:
 			performRenderCycle(redrawContext);
 			System.gc();
@@ -134,13 +133,29 @@ public class GUIContentImp implements GUIContent {
 		}
 	}
 
+	private void performStyleCycle() {
+		StyleGenerator styleGenerator = configuration.styleGeneratorRoot().generateChildStyleGenerator(rootUI);
+		recursiveStyleCycle(rootContext, styleGenerator);
+	}
+
+	private void recursiveStyleCycle(Context rootContext, StyleGenerator styleGenerator) {
+		rootContext.regenerateStyling(styleGenerator.getStyleDirectives(), new StyleContext(configuration.lookAndFeel()));
+		ComponentUI[] childUIs = rootContext.children()
+			.stream()
+			.map(child -> child.componentUI())
+			.toArray(ComponentUI[]::new);
+		StyleGenerator[] childStyleGenerators = styleGenerator.createChildStyleGenerators(childUIs);
+		for (int i = 0; i < rootContext.children().size(); i++) {
+			recursiveStyleCycle(rootContext.children().get(i), childStyleGenerators[i]);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private <T extends Context> void performBoxCycle() {
-		BoxContext boxContext = new BoxContextImp(configuration.lookAndFeel());
-		StyleGenerator styleGenerator = configuration.styleGeneratorRoot().generateChildStyleGenerator(rootUI);
+		BoxContext boxContext = new BoxContext();
 		UIDisplay<T, ?, ?> rootDisplay = (UIDisplay<T, ?, ?>) rootUI.getRootDisplay();
 		
-		List<? extends Box> generatedBoxes = rootDisplay.generateBoxes((T) rootContext, boxContext, styleGenerator);
+		List<? extends Box> generatedBoxes = rootDisplay.generateBoxes((T) rootContext, boxContext);
 		if (generatedBoxes.size() == 0) {
 			this.rootBox = null;
 			return;

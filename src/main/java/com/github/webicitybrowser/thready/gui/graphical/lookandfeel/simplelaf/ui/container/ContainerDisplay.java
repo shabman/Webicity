@@ -3,7 +3,6 @@ package com.github.webicitybrowser.thready.gui.graphical.lookandfeel.simplelaf.u
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.cache.MappingCache;
 import com.github.webicitybrowser.thready.gui.graphical.cache.imp.MappingCacheImp;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
@@ -24,18 +23,16 @@ public class ContainerDisplay implements UIDisplay<ContainerContext, ChildrenBox
 
 	@Override
 	public ContainerContext createContext(ComponentUI componentUI) {
-		MappingCache<Component, ContainerChildEntry> childCache = new MappingCacheImp<>(ContainerChildEntry[]::new, entry -> entry.component());
+		MappingCache<Component, ContainerChildEntry> childCache = new MappingCacheImp<>(entry -> entry.component());
 		return new ContainerContext(this, componentUI, childCache);
 	}
 
 	@Override
-	public List<ChildrenBox> generateBoxes(
-		ContainerContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator
-	) {
+	public List<ChildrenBox> generateBoxes(ContainerContext displayContext, BoxContext boxContext) {
 		ContainerBox rootBox = new ContainerBox(
 			this, displayContext.owningComponent(),
-			styleGenerator.getStyleDirectives(), WebDefaults.INLINE_DISPLAY);
-		ContainerChildrenBoxGenerator.addChildrenBoxes(displayContext, rootBox, boxContext, styleGenerator);
+			displayContext.styleDirectives(), WebDefaults.INLINE_DISPLAY);
+		ContainerChildrenBoxGenerator.addChildrenBoxes(displayContext, rootBox, boxContext);
 		return List.of(rootBox);
 	}
 

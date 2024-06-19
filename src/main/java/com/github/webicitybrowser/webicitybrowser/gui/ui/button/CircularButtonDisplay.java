@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
@@ -24,9 +23,9 @@ public class CircularButtonDisplay implements UIDisplay<CircularButtonContext, C
 	}
 
 	@Override
-	public List<CircularButtonBox> generateBoxes(CircularButtonContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<CircularButtonBox> generateBoxes(CircularButtonContext displayContext, BoxContext boxContext) {
 		CircularButtonComponent circularButtonComponent = (CircularButtonComponent) displayContext.componentUI().getComponent();
-		DirectivePool styleDirectives = styleGenerator.getStyleDirectives();
+		DirectivePool styleDirectives = displayContext.styleDirectives();
 		return List.of(new CircularButtonBox(circularButtonComponent, styleDirectives, this));
 	}
 

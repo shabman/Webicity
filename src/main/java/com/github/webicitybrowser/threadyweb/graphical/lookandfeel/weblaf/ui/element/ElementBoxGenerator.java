@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.SolidLayoutManager;
-import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.ChildrenBox;
@@ -35,11 +33,9 @@ public class ElementBoxGenerator {
 		this.styledUnitGenerator = styledUnitGenerator;
 	}
 	
-	public List<ChildrenBox> generateBoxes(ElementContext elementContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		DirectivePool directives = styleGenerator.getStyleDirectives();
-		
-		ChildrenBox rootBox = createBox(elementContext, directives);
-		addChildrenToBox(rootBox, elementContext, boxContext, styleGenerator);
+	public List<ChildrenBox> generateBoxes(ElementContext elementContext, BoxContext boxContext) {
+		ChildrenBox rootBox = createBox(elementContext, elementContext.styleDirectives());
+		addChildrenToBox(rootBox, elementContext, boxContext);
 		
 		return List.of(rootBox);
 	}
@@ -70,31 +66,19 @@ public class ElementBoxGenerator {
 	
 	// Children
 	
-	private static void addChildrenToBox(ChildrenBox rootBox, ElementContext elementContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		List<Box> children = getChildrenBoxes(elementContext, boxContext, styleGenerator);
+	private static void addChildrenToBox(ChildrenBox rootBox, ElementContext elementContext, BoxContext boxContext) {
+		List<Box> children = getChildrenBoxes(elementContext, boxContext);
 		rootBox.getChildrenTracker().addAllChildren(children);
 	}
 	
-	private static List<Box> getChildrenBoxes(ElementContext elementContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	private static List<Box> getChildrenBoxes(ElementContext elementContext, BoxContext boxContext) {
 		List<Box> childrenBoxes = new ArrayList<>();
 		
-		Context[] pipelines = elementContext.children(boxContext.getLookAndFeel());
-		ComponentUI[] children = getComponentUIsFromPipelines(pipelines);
-		StyleGenerator[] childStyleGenerators = styleGenerator.createChildStyleGenerators(children);
-		for (int i = 0; i < pipelines.length; i++) {
-			childrenBoxes.addAll(WebBoxGeneratorUtil.generateWebBoxes(pipelines[i], boxContext, childStyleGenerators[i]));
+		for (Context child : elementContext.children()) {
+			childrenBoxes.addAll(WebBoxGeneratorUtil.generateWebBoxes(child, boxContext));
 		}
 		
 		return childrenBoxes;
-	}
-
-	private static ComponentUI[] getComponentUIsFromPipelines(Context[] pipelines) {
-		ComponentUI[] componentUIs = new ComponentUI[pipelines.length];
-		for (int i = 0; i < pipelines.length; i++) {
-			componentUIs[i] = pipelines[i].componentUI();
-		}
-		
-		return componentUIs;
 	}
 	
 }

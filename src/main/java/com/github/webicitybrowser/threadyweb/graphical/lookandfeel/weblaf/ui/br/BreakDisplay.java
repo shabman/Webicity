@@ -3,7 +3,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.ui.br
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
@@ -21,9 +20,9 @@ public class BreakDisplay implements UIDisplay<BreakContext, BreakBox, BreakUnit
 	}
 
 	@Override
-	public List<BreakBox> generateBoxes(BreakContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<BreakBox> generateBoxes(BreakContext displayContext, BoxContext boxContext) {
 		return List.of(new BreakBox(
-			this, displayContext.componentUI().getComponent(), styleGenerator.getStyleDirectives()
+			this, displayContext.componentUI().getComponent(), displayContext.styleDirectives()
 		));
 	}
 

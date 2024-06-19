@@ -3,7 +3,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.ui.el
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
@@ -25,7 +24,7 @@ public class StyledUnitDisplay implements UIDisplay<Context, Box, StyledUnit> {
 	}
 
 	@Override
-	public List<Box> generateBoxes(Context displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<Box> generateBoxes(Context displayContext, BoxContext boxContext) {
 		throw new UnsupportedOperationException("Unimplemented method 'generateBoxes'");
 	}
 

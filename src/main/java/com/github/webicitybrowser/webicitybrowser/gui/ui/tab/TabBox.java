@@ -5,7 +5,7 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDispl
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.webicitybrowser.gui.binding.component.tab.TabComponent;
 
-public record TabBox(TabContext context, DirectivePool styleDirectives) implements Box {
+public record TabBox(TabContext context) implements Box {
 
 	@Override
 	public UIDisplay<?, ?, ?> display() {
@@ -15,6 +15,10 @@ public record TabBox(TabContext context, DirectivePool styleDirectives) implemen
 	@Override
 	public TabComponent owningComponent() {
 		return (TabComponent) context.componentUI().getComponent();
+	}
+
+	public DirectivePool styleDirectives() {
+		return context.styleDirectives();
 	}
 
 }

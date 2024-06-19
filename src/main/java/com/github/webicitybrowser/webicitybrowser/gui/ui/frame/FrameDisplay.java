@@ -3,8 +3,6 @@ package com.github.webicitybrowser.webicitybrowser.gui.ui.frame;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
@@ -25,15 +23,14 @@ public class FrameDisplay implements UIDisplay<FrameContext, FrameBox, FrameUnit
 	}
 
 	@Override
-	public List<FrameBox> generateBoxes(FrameContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<FrameBox> generateBoxes(FrameContext displayContext, BoxContext boxContext) {
 		if (displayContext.screenContent() == null) {
 			return List.of();
 		}
 		
 		FrameComponent frameComponent = (FrameComponent) displayContext.componentUI().getComponent();
-		DirectivePool styleDirectives = styleGenerator.getStyleDirectives();
 		
-		return List.of(new FrameBox(frameComponent, styleDirectives, this, displayContext));
+		return List.of(new FrameBox(frameComponent, this, displayContext));
 	}
 
 	@Override

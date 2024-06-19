@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
@@ -24,9 +23,9 @@ public class TextDisplay implements UIDisplay<TextContext, TextBox, TextUnit> {
 	}
 
 	@Override
-	public List<TextBox> generateBoxes(TextContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<TextBox> generateBoxes(TextContext displayContext, BoxContext boxContext) {
 		TextComponent component = (TextComponent) displayContext.componentUI().getComponent();
-		DirectivePool directives = styleGenerator.getStyleDirectives();
+		DirectivePool directives = displayContext.styleDirectives();
 		return List.of(new TextBox(this, component, directives));
 	}
 

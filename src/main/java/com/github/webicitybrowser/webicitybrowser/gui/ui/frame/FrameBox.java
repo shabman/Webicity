@@ -5,6 +5,11 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDispl
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.webicity.core.component.FrameComponent;
 
-public record FrameBox(FrameComponent owningComponent, DirectivePool styleDirectives, UIDisplay<?, ?, ?> display, FrameContext displayContext) implements Box {
+public record FrameBox(FrameComponent owningComponent, UIDisplay<?, ?, ?> display, FrameContext displayContext) implements Box {
+
+	@Override
+	public DirectivePool styleDirectives() {
+		return displayContext.styleDirectives();
+	}
 
 }

@@ -5,7 +5,6 @@ import java.util.function.Function;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutManagerContext;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.LayoutResult;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.SolidLayoutManager;
@@ -48,8 +47,8 @@ public class ElementDisplay implements UIDisplay<ElementContext, ChildrenBox, El
 	}
 
 	@Override
-	public List<ChildrenBox> generateBoxes(ElementContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		return elementBoxGenerator.generateBoxes(displayContext, boxContext, styleGenerator);
+	public List<ChildrenBox> generateBoxes(ElementContext displayContext, BoxContext boxContext) {
+		return elementBoxGenerator.generateBoxes(displayContext, boxContext);
 	}
 
 	@Override

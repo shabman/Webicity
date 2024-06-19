@@ -3,7 +3,6 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.displ
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIPipeline;
@@ -31,14 +30,14 @@ public class ScrollDisplay implements UIDisplay<ScrollContext, ScrollBox, Scroll
 	}
 
 	@Override
-	public List<ScrollBox> generateBoxes(ScrollContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		List<Box> innerBoxes = UIPipeline.generateBoxes(displayContext.innerContext(), boxContext, styleGenerator);
+	public List<ScrollBox> generateBoxes(ScrollContext displayContext, BoxContext boxContext) {
+		List<Box> innerBoxes = UIPipeline.generateBoxes(displayContext.innerContext(), boxContext);
 		if (innerBoxes.size() != 1) {
 			throw new IllegalStateException("Multiple inner boxes for scroll display not yet supported");
 		}
 		Box innerBox = innerBoxes.get(0);
 
-		return List.of(new ScrollBox(displayContext, styleGenerator.getStyleDirectives(), innerBox));
+		return List.of(new ScrollBox(displayContext, displayContext.styleDirectives(), innerBox));
 	}
 
 	@Override

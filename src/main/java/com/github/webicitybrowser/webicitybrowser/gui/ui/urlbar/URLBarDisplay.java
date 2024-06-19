@@ -3,8 +3,6 @@ package com.github.webicitybrowser.webicitybrowser.gui.ui.urlbar;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.base.InvalidationLevel;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
@@ -34,10 +32,9 @@ public class URLBarDisplay implements UIDisplay<URLBarContext, URLBarBox, URLBar
 	}
 
 	@Override
-	public List<URLBarBox> generateBoxes(URLBarContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<URLBarBox> generateBoxes(URLBarContext displayContext, BoxContext boxContext) {
 		URLBarComponent owningComponent = (URLBarComponent) displayContext.componentUI().getComponent();
-		DirectivePool styleDirectives = styleGenerator.getStyleDirectives();
-		return List.of(new URLBarBox(owningComponent, styleDirectives, this, displayContext));
+		return List.of(new URLBarBox(owningComponent, this, displayContext));
 	}
 
 	@Override

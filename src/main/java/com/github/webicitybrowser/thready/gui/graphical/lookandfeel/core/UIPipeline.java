@@ -3,7 +3,6 @@ package com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.composite.GlobalCompositeContext;
@@ -22,11 +21,9 @@ public final class UIPipeline {
 	private UIPipeline() {}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Context> List<Box> generateBoxes(
-		Context context, BoxContext boxContext, StyleGenerator styleGenerator
-	) {
+	public static <T extends Context> List<Box> generateBoxes(Context context, BoxContext boxContext) {
 		UIDisplay<T, ?, ?> display = (UIDisplay<T, ?, ?>) context.display();
-		return (List<Box>) display.generateBoxes((T) context, boxContext, styleGenerator);
+		return (List<Box>) display.generateBoxes((T) context, boxContext);
 	}
 
 	@SuppressWarnings("unchecked")

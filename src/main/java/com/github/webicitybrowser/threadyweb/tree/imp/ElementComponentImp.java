@@ -1,5 +1,7 @@
 package com.github.webicitybrowser.threadyweb.tree.imp;
 
+import java.util.List;
+
 import com.github.webicitybrowser.spec.dom.node.Element;
 import com.github.webicitybrowser.spec.dom.node.Node;
 import com.github.webicitybrowser.spec.dom.node.Text;
@@ -17,7 +19,7 @@ public class ElementComponentImp extends BaseWebComponent implements ElementComp
 	private final Element element;
 	private final WebComponentContext componentContext;
 	
-	private final MappingCache<Node, WebComponent> componentCache = new MappingCacheImp<>(WebComponent[]::new, component -> component.getNode());
+	private final MappingCache<Node, Component> componentCache = new MappingCacheImp<>(component -> ((WebComponent) component).getNode());
 
 	public ElementComponentImp(Element element, WebComponentContext componentContext) {
 		this.element = element;
@@ -35,8 +37,8 @@ public class ElementComponentImp extends BaseWebComponent implements ElementComp
 	}
 
 	@Override
-	public WebComponent[] getChildren() {
-		Node[] children = filterChildren(element.getChildNodes());
+	public List<Component> getChildren() {
+		List<Node> children = List.of(filterChildren(element.getChildNodes()));
 		componentCache.recompute(children, child -> WebComponentFactory.createWebComponent(child, componentContext));
 		return componentCache.getComputedMappings();
 	}

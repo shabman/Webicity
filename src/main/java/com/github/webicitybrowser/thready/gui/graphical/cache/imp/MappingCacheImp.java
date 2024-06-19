@@ -1,5 +1,7 @@
 package com.github.webicitybrowser.thready.gui.graphical.cache.imp;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import com.github.webicitybrowser.thready.gui.graphical.cache.MappingCache;
@@ -8,33 +10,29 @@ public class MappingCacheImp<T, U> implements MappingCache<T, U> {
 	
 	// TODO: Create relevant tests
 
-	private final Function<Integer, U[]> arrayFactory;
 	private final Function<U, T> keyFinder;
 	
-	private U[] mappingCacheAsArray;
+	private List<U> mappingCacheAsList;
 	
 	// Built-in linked lists do not give us access to the node
 	private final CacheNode<U> mappingCache = new CacheNode<>(null);
 	
-	public MappingCacheImp(Function<Integer, U[]> arrayFactory, Function<U, T> keyFinder) {
-		this.arrayFactory = arrayFactory;
+	public MappingCacheImp(Function<U, T> keyFinder) {
 		this.keyFinder = keyFinder;
-		
-		mappingCacheAsArray = arrayFactory.apply(0);
 	}
 	
 	@Override
-	public void recompute(T[] children, Function<T, U> mappingGenerator) {
+	public void recompute(List<T> children, Function<T, U> mappingGenerator) {
 		ensureCacheContainsCurrentMappings(children, mappingGenerator);
-		this.mappingCacheAsArray = saveCacheToArray(arrayFactory.apply(children.length));
+		this.mappingCacheAsList = saveCacheToList(children.size());
 	}
 
 	@Override
-	public U[] getComputedMappings() {
-		return mappingCacheAsArray;
+	public List<U> getComputedMappings() {
+		return mappingCacheAsList;
 	}
 	
-	private void ensureCacheContainsCurrentMappings(T[] children, Function<T, U> mappingGenerator) {
+	private void ensureCacheContainsCurrentMappings(List<T> children, Function<T, U> mappingGenerator) {
 		CacheNode<U> lastNode = mappingCache;
 		
 		for (T child: children) {
@@ -85,10 +83,11 @@ public class MappingCacheImp<T, U> implements MappingCache<T, U> {
 		return null;
 	}
 	
-	private U[] saveCacheToArray(U[] componentMappings) {
+	private List<U> saveCacheToList(int size) {
+		List<U> componentMappings = new ArrayList<>(size);
 		CacheNode<U> nextNode = mappingCache.getNext();
-		for (int i = 0; nextNode != null; i++) {
-			componentMappings[i] = nextNode.getValue();
+		while (nextNode != null) {
+			componentMappings.add(nextNode.getValue());
 			nextNode = nextNode.getNext();
 		}
 		

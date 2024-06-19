@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
@@ -24,9 +23,9 @@ public class MenuButtonDisplay implements UIDisplay<MenuButtonContext, MenuButto
 	}
 
 	@Override
-	public List<MenuButtonBox> generateBoxes(MenuButtonContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
+	public List<MenuButtonBox> generateBoxes(MenuButtonContext displayContext, BoxContext boxContext) {
 		Component owningComponent = displayContext.componentUI().getComponent();
-		DirectivePool styleDirectives = styleGenerator.getStyleDirectives();
+		DirectivePool styleDirectives = displayContext.styleDirectives();
 		return List.of(new MenuButtonBox(owningComponent, styleDirectives, this));
 	}
 

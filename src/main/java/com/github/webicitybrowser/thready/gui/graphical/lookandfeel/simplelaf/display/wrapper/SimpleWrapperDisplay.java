@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
@@ -35,13 +33,12 @@ public class SimpleWrapperDisplay<T extends Context, U extends Box, V extends Re
 	}
 
 	@Override
-	public List<SimpleWrapperBox<U>> generateBoxes(SimpleWrapperContext<T> displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		List<U> originalBoxes = childDisplay.generateBoxes(displayContext.childContext(), boxContext, styleGenerator);
+	public List<SimpleWrapperBox<U>> generateBoxes(SimpleWrapperContext<T> displayContext, BoxContext boxContext) {
+		List<U> originalBoxes = childDisplay.generateBoxes(displayContext.childContext(), boxContext);
 		List<SimpleWrapperBox<U>> wrappedBoxes = new ArrayList<>(originalBoxes.size());
 		Component component = displayContext.componentUI().getComponent();
-		DirectivePool directives = styleGenerator.getStyleDirectives();
 		for (U originalBox: originalBoxes) {
-			wrappedBoxes.add(new SimpleWrapperBox<>(component, directives, this, originalBox));
+			wrappedBoxes.add(new SimpleWrapperBox<>(component, displayContext.styleDirectives(), this, originalBox));
 		}
 		
 		return wrappedBoxes;

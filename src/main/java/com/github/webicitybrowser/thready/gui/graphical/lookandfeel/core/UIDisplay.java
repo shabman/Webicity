@@ -3,7 +3,6 @@ package com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.composite.GlobalCompositeContext;
@@ -20,7 +19,7 @@ public interface UIDisplay<T extends Context, U extends Box, V extends RenderedU
 
 	T createContext(ComponentUI componentUI);
 	
-	List<U> generateBoxes(T displayContext, BoxContext boxContext, StyleGenerator styleGenerator);
+	List<U> generateBoxes(T displayContext, BoxContext boxContext);
 
 	V renderBox(U box, GlobalRenderContext globalRenderContext, LocalRenderContext localRenderContext);
 

@@ -3,8 +3,6 @@ package com.github.webicitybrowser.webicitybrowser.gui.ui.tab;
 import java.util.List;
 
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
-import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
-import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.UIDisplay;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.BoxContext;
@@ -22,9 +20,8 @@ public class TabDisplay implements UIDisplay<TabContext, TabBox, TabUnit> {
 	}
 
 	@Override
-	public List<TabBox> generateBoxes(TabContext displayContext, BoxContext boxContext, StyleGenerator styleGenerator) {
-		DirectivePool styleDirectives = styleGenerator.getStyleDirectives();
-		return List.of(new TabBox(displayContext, styleDirectives));
+	public List<TabBox> generateBoxes(TabContext displayContext, BoxContext boxContext) {
+		return List.of(new TabBox(displayContext));
 	}
 
 	@Override
