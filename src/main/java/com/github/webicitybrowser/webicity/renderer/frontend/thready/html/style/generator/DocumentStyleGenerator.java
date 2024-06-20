@@ -11,6 +11,7 @@ import com.github.webicitybrowser.spec.dom.node.Node;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
+import com.github.webicitybrowser.threadyweb.tree.ElementComponent;
 import com.github.webicitybrowser.threadyweb.tree.WebComponent;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMNode;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMPropertyResolver;
@@ -52,8 +53,12 @@ public class DocumentStyleGenerator implements StyleGenerator {
 				continue;
 			}
 			childGenerators[i] = childGenerator;
-			// TODO: Use actual component rule map
-			childGenerator.generateStyleDirectives(this.propertyResolver, CSSRuleList.createEmpty());
+			
+			CSSRuleList ruleList = childUI.getComponent() instanceof ElementComponent elementComponent ?
+				elementComponent.getComponentRules() :
+				CSSRuleList.createEmpty();
+			
+			childGenerator.generateStyleDirectives(this.propertyResolver, ruleList);
 			i++;
 		}
 

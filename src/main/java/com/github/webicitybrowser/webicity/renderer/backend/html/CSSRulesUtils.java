@@ -27,6 +27,16 @@ public final class CSSRulesUtils {
 		}
 	}
 
+	public static CSSRuleList createDeclarationRuleList(Reader childContextReader) {
+		try {
+			Token[] tokens = CSSTokenizer.create().tokenize(childContextReader);
+			CSSRule[] rules = CSSParser.create().parseAListOfDeclarations(tokens);
+			return CSSRuleList.create(rules);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static void addStylesheet(CSSRuleList cssRuleList, Element element) {
 		CSSRuleList ruleList = cssRuleList;
 		if(ruleList.getLength() > 0) {

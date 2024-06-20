@@ -7,6 +7,7 @@ import com.github.webicitybrowser.spec.dom.node.Document;
 import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGenerator;
 import com.github.webicitybrowser.thready.gui.directive.core.style.StyleGeneratorRoot;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.ComponentUI;
+import com.github.webicitybrowser.threadyweb.tree.ElementComponent;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMTree;
 import com.github.webicitybrowser.webicity.renderer.frontend.thready.html.style.cssbinding.CSSOMDeclarationParser;
 
@@ -30,7 +31,13 @@ public class DocumentStyleGeneratorRoot implements StyleGeneratorRoot {
 		}
 
 		// TODO: Allow rules from component
-		rootGenerator.generateStyleDirectives(null, CSSRuleList.createEmpty());
+
+		if (componentUI.getComponent() instanceof ElementComponent elementComponent) {
+			CSSRuleList componentRules = elementComponent.getComponentRules();
+			rootGenerator.generateStyleDirectives(null, componentRules);
+		} else {
+			rootGenerator.generateStyleDirectives(null, CSSRuleList.createEmpty());
+		}
 		
 		return rootGenerator;
 	}

@@ -21,11 +21,8 @@ public class DataURLProcessor {
 		if (mimeType.startsWith(";")) mimeType = "text/plain";
 		byte[] decodedBody = null;
 		if (mimeType.toLowerCase().matches(".*; *base64$")) {
-			try {
-				decodedBody = Base64Util.forgivingBase64Decode(body);
-			} catch (IllegalArgumentException e) {
-				return Optional.empty();
-			}
+			decodedBody = Base64Util.forgivingBase64Decode(body);
+			if (decodedBody == null) return Optional.empty();
 			mimeType = mimeType
 				.substring(0, mimeType.length() - 6)
 				.stripTrailing();
