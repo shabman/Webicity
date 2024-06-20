@@ -84,14 +84,16 @@ public final class FlowBlockFloatRenderer {
 		AbsoluteSize floatMarginSize = LayoutSizeUtils.addPadding(floatInnerSize, margins);
 
 		float offsetBlockPosition = blockPosition + trackerPositionOffset.y();
-		float posX = floatDirection == FloatDirection.LEFT ?
-			floatTracker.getLeftInlineOffset(offsetBlockPosition) :
-			parentSize.width() - floatTracker.getRightInlineOffset(blockPosition, parentSize.width()) - childUnit.fitSize().width();
+		float adjsutedOffsetBlockPosition = floatTracker.getFitBlockPosition(offsetBlockPosition, parentSize.width(), floatInnerSize);
+		float adjustedBlockPosition = adjsutedOffsetBlockPosition - trackerPositionOffset.y();
+		float posInline = floatDirection == FloatDirection.LEFT ?
+			floatTracker.getLeftInlineOffset(adjustedBlockPosition + trackerPositionOffset.y()) :
+			parentSize.width() - floatTracker.getRightInlineOffset(adjustedBlockPosition, parentSize.width()) - childUnit.fitSize().width();
 
-		AbsolutePosition floatMarginPosition = new AbsolutePosition(posX, blockPosition);
+		AbsolutePosition floatMarginPosition = new AbsolutePosition(posInline, adjsutedOffsetBlockPosition);
 		AbsolutePosition floatPosition = floatDirection == FloatDirection.LEFT ?
-			new AbsolutePosition(posX + margins[0], blockPosition + margins[2]) :
-			new AbsolutePosition(posX - margins[1], blockPosition + margins[2]);
+			new AbsolutePosition(posInline + margins[0], adjustedBlockPosition + margins[2]) :
+			new AbsolutePosition(posInline - margins[1], adjustedBlockPosition + margins[2]);
 
 		if (floatDirection == FloatDirection.LEFT) {
 			floatTracker.addLeftFloat(new Rectangle(floatMarginPosition, floatMarginSize));

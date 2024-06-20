@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.floatbox.FloatTracker;
@@ -69,9 +70,52 @@ public class FloatTrackerImp implements FloatTracker {
 	}
 
 	@Override
-	public float getFitBlockPosition(float blockStart, float inlineSize, float blockSize) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getFitBlockPosition'");
+	public float getFitBlockPosition(float blockStart, float inlineEnd, AbsoluteSize itemSize) {
+		// TODO: Simplify this method
+		Rectangle[] leftRectangles = leftFloats.toArray(Rectangle[]::new);
+		Rectangle[] rightRectangles = rightFloats.toArray(Rectangle[]::new);
+		float currentY = blockStart;
+		int leftPos = getInitialSearchPos(leftRectangles, currentY);
+		int rightPos = getInitialSearchPos(rightRectangles, currentY);
+		float successWindow = -1;
+		while (true) {
+			if (leftPos == -1 && rightPos == -1) {
+				return successWindow == -1 ? currentY : successWindow;
+			}
+
+			float leftX = leftPos == -1 ? 0 : leftRectangles[leftPos].position().x() + leftRectangles[leftPos].size().width();
+			float rightX = rightPos == -1 ? inlineEnd : rightRectangles[rightPos].position().x();
+			if (rightX - leftX >= itemSize.width() && successWindow == -1) {
+				successWindow = currentY;
+			} else if (rightX - leftX < itemSize.width()) {
+				successWindow = -1;
+			}
+
+			if (successWindow != -1 && currentY - successWindow >= itemSize.height()) {
+				return successWindow;
+			}
+
+			float leftEnd = leftPos == -1 ? -1 : leftRectangles[leftPos].position().y() + leftRectangles[leftPos].size().height();
+			float rightEnd = rightPos == -1 ? -1 : rightRectangles[rightPos].position().y() + rightRectangles[rightPos].size().height();
+			if (leftPos != -1 && rightPos != -1) {
+				if (leftEnd < rightEnd) {
+					currentY = leftEnd;
+					leftPos++;
+				} else {
+					currentY = rightEnd;
+					rightPos++;
+				}
+			} else if (leftPos != -1) {
+				currentY = leftEnd;
+				leftPos++;
+			} else {
+				currentY = rightEnd;
+				rightPos++;
+			}
+
+			if (leftPos >= leftRectangles.length) leftPos = -1;
+			if (rightPos >= rightRectangles.length) rightPos = -1;
+		}
 	}
 
 	private float getFreePosition(float blockStart, float minFreeSize, Set<Rectangle> floats) {
@@ -93,4 +137,14 @@ public class FloatTrackerImp implements FloatTracker {
 		return nextUncheckedY;
 	}
 	
+	private int getInitialSearchPos(Rectangle[] rectangles, float currentY) {
+		for (int i = 0; i < rectangles.length; i++) {
+			if (rectangles[i].position().y() + rectangles[i].size().height() > currentY) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
 }

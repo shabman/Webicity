@@ -1,5 +1,6 @@
 package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.floatbox;
 
+import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.floatbox.imp.FloatTrackerImp;
 
@@ -17,7 +18,7 @@ public interface FloatTracker {
 
 	float getRightInlineOffset(float blockStart, float inlineEnd);
 
-	float getFitBlockPosition(float blockStart, float inlineSize, float blockSize);
+	float getFitBlockPosition(float blockStart, float inlineEnd, AbsoluteSize itemSize);
 
 	static FloatTracker create() {
 		return new FloatTrackerImp();

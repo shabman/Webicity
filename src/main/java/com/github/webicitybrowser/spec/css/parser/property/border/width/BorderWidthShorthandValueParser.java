@@ -44,7 +44,7 @@ public class BorderWidthShorthandValueParser implements PropertyValueParser<Mult
 	}
 
 	private PropertyValueParseResult<MultiBorderWidthValue> convertValuesToBorderWidthValue(CSSValue[] values, int length) {
-		MultiBorderWidthValue value = new MultiBorderWidthValue(values[0], values[1], values[2], values[3]);
+		MultiBorderWidthValue value = new MultiBorderWidthValue(values[3], values[1], values[0], values[2]);
 		return PropertyValueParseResultImp.of(value, length);
 	}
 
