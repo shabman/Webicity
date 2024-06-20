@@ -11,7 +11,9 @@ import com.github.webicitybrowser.spec.css.parser.selectors.combinator.Combinato
 import com.github.webicitybrowser.spec.css.parser.selectors.selector.AttributeSelectorParser;
 import com.github.webicitybrowser.spec.css.parser.selectors.selector.ClassSelectorParser;
 import com.github.webicitybrowser.spec.css.parser.selectors.selector.IDSelectorParser;
+import com.github.webicitybrowser.spec.css.parser.selectors.selector.PsuedoSelectorParser;
 import com.github.webicitybrowser.spec.css.parser.selectors.selector.TypeSelectorParser;
+import com.github.webicitybrowser.spec.css.parser.tokens.ColonToken;
 import com.github.webicitybrowser.spec.css.parser.tokens.CommaToken;
 import com.github.webicitybrowser.spec.css.parser.tokens.DelimToken;
 import com.github.webicitybrowser.spec.css.parser.tokens.EOFToken;
@@ -29,6 +31,7 @@ public class ComplexSelectorParser {
 	private final ClassSelectorParser classSelectorParser = new ClassSelectorParser();
 	private final IDSelectorParser idSelectorParser = new IDSelectorParser();
 	private final AttributeSelectorParser attributeSelectorParser = new AttributeSelectorParser();
+	private final PsuedoSelectorParser psuedoSelectorParser = new PsuedoSelectorParser();
 	
 	private final CombinatorParser combinatorParser = new CombinatorParser();
 	
@@ -96,6 +99,8 @@ public class ComplexSelectorParser {
 			return idSelectorParser.parse(stream);
 		} else if (token instanceof LSBracketToken) {
 			return attributeSelectorParser.parse(stream);
+		} else if (token instanceof ColonToken) {
+			return psuedoSelectorParser.parse(stream);
 		} else {
 			throw new ParseFormatException("Expected simple selector", stream.position());
 		}

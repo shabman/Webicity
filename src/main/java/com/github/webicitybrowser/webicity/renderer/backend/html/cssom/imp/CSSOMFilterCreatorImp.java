@@ -11,9 +11,11 @@ import com.github.webicitybrowser.spec.css.selectors.combinator.NextSiblingCombi
 import com.github.webicitybrowser.spec.css.selectors.combinator.SubsequentSiblingCombinator;
 import com.github.webicitybrowser.spec.css.selectors.selector.AttributeSelector;
 import com.github.webicitybrowser.spec.css.selectors.selector.AttributeSelector.AttributeSelectorOperation;
+import com.github.webicitybrowser.spec.css.selectors.selector.psuedo.PsuedoSelector;
 import com.github.webicitybrowser.spec.css.selectors.selector.IDSelector;
 import com.github.webicitybrowser.spec.css.selectors.selector.TypeSelector;
 import com.github.webicitybrowser.spec.dom.node.Node;
+import com.github.webicitybrowser.spec.infra.Namespace;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMFilter;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.CSSOMFilterCreator;
 import com.github.webicitybrowser.webicity.renderer.backend.html.cssom.filter.AttributeFilter;
@@ -52,9 +54,22 @@ public class CSSOMFilterCreatorImp<T> implements CSSOMFilterCreator<T> {
 			return new SubsequentSiblingFilter<>();
 		} else if (complexSelectorPart instanceof NextSiblingCombinator) {
 			return new NextSiblingFilter<>();
+		} else if (complexSelectorPart instanceof PsuedoSelector psuedoSelector) {
+			return createPsuedoFilter(psuedoSelector);
 		} else {
 			throw new UnsupportedOperationException("Not implemented yet: " +
 				complexSelectorPart.getClass().getInterfaces()[0].getName());
+		}
+	}
+
+	private CSSOMFilter<T, CSSRuleList> createPsuedoFilter(PsuedoSelector psuedoSelector) {
+		switch (psuedoSelector.getType()) {
+		case "root":
+			// TODO: Needs to have higher priority
+			return new TypeFilter<>(Namespace.HTML_NAMESPACE, "html", nodeGetter);
+		default:
+			throw new UnsupportedOperationException("Not implemented yet: " +
+				psuedoSelector.getClass().getInterfaces()[0].getName());
 		}
 	}
 
