@@ -20,15 +20,15 @@ public class PositionOffsetCalculations {
 	private PositionOffsetCalculations() {}
 
 	public static float[] calculateOffset(Function<Boolean, SizeCalculationContext> sizeCalculationContextGenerator, DirectivePool styleDirectives) {
-		float[] margins = new float[4];
+		float[] offsets = new float[4];
 		SizeCalculationContext horizontalSizeCalculationContext = sizeCalculationContextGenerator.apply(true);
 		SizeCalculationContext verticalSizeCalculationContext = sizeCalculationContextGenerator.apply(false);
-		margins[0] = computePosition(horizontalSizeCalculationContext, styleDirectives, LeftPositionOffsetDirective.class, POSITION_AUTO);
-		margins[1] = computePosition(horizontalSizeCalculationContext, styleDirectives, RightPositionOffsetDirective.class, POSITION_AUTO);
-		margins[2] = computePosition(verticalSizeCalculationContext, styleDirectives, TopPositionOffsetDirective.class, POSITION_AUTO);
-		margins[3] = computePosition(verticalSizeCalculationContext, styleDirectives, BottomPositionOffsetDirective.class, POSITION_AUTO);
+		offsets[0] = computePosition(horizontalSizeCalculationContext, styleDirectives, LeftPositionOffsetDirective.class, POSITION_AUTO);
+		offsets[1] = computePosition(horizontalSizeCalculationContext, styleDirectives, RightPositionOffsetDirective.class, POSITION_AUTO);
+		offsets[2] = computePosition(verticalSizeCalculationContext, styleDirectives, TopPositionOffsetDirective.class, POSITION_AUTO);
+		offsets[3] = computePosition(verticalSizeCalculationContext, styleDirectives, BottomPositionOffsetDirective.class, POSITION_AUTO);
 
-		return margins;
+		return offsets;
 	}
 
 	private static float computePosition(

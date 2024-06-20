@@ -3,6 +3,7 @@ package com.github.webicitybrowser.webicity.renderer.backend.html.cssom.imp;
 import java.util.Optional;
 
 import com.github.webicitybrowser.spec.css.parser.TokenLike;
+import com.github.webicitybrowser.spec.css.parser.tokens.IdentToken;
 import com.github.webicitybrowser.spec.css.parser.util.TokenUtils;
 import com.github.webicitybrowser.spec.css.rule.CSSRule;
 import com.github.webicitybrowser.spec.css.rule.CSSRuleList;
@@ -57,17 +58,33 @@ public class CSSOMPropertyResolverImp implements CSSOMPropertyResolver {
 			
 			TokenLike[] tokens = preresolveTokens(declaration.getValue());
 			if (tokens == null) continue;
-			Optional<T> declarationResult = filter.filter(declaration.getName(), tokens);
+			Optional<T> specialResult = checkAndHandleSpecial(filter, tokens);
+			Optional<T> declarationResult = specialResult.isPresent() ?
+				specialResult :
+				filter.filter(declaration.getName(), tokens);
 			if (declarationResult.isPresent() && declaration.isImportant()) {
 				foundImportantProperty[0] = true;
 				return declarationResult;
 			}
-			if (declarationResult.isPresent()) {
+			if (declarationResult.isPresent() && result.isEmpty()) {
 				result = declarationResult;
 			}
 		}
 
 		return result;
+	}
+
+	private <T> Optional<T> checkAndHandleSpecial(CSSOMPropertyResolverFilter<T> filter, TokenLike[] tokens) {
+		if (
+			tokens.length == 1
+			&& tokens[0] instanceof IdentToken identToken
+			&& identToken.getValue().equals("inherit")
+			&& parent != null
+		) {
+			return parent.resolveOrInheritProperty(filter);
+		}
+
+		return Optional.empty();
 	}
 
 	private TokenLike[] preresolveTokens(TokenLike[] tokens) {

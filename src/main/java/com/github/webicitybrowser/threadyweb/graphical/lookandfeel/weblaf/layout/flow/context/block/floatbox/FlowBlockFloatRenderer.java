@@ -3,6 +3,7 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 import com.github.webicitybrowser.thready.dimensions.AbsolutePosition;
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
 import com.github.webicitybrowser.thready.dimensions.Rectangle;
+import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
 import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.thready.gui.graphical.layout.core.ChildLayoutResult;
 import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
@@ -12,6 +13,7 @@ import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.r
 import com.github.webicitybrowser.threadyweb.graphical.directive.FloatDirective;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.FlowRootContextSwitch;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.FlowBlockChildRenderResult;
+import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.FlowBlockMarginCalculations;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.FlowBlockPrerenderSizingInfo;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.FlowBlockRendererState;
 import com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layout.flow.context.block.FlowBlockUnitRenderer;
@@ -41,11 +43,7 @@ public final class FlowBlockFloatRenderer {
 			.getDirectiveOrEmpty(FloatDirective.class)
 			.map(FloatDirective::getFloatDirection)
 			.orElseThrow(() -> new IllegalStateException("Float box has no float directive"));
-		if (floatDirection == FloatDirection.LEFT) {
-			addLeftFloat(state, childUnit, blockPosition);
-		} else {
-			addRightFloat(state, childUnit, blockPosition);
-		}
+		addFloat(state, childUnit, blockPosition, floatDirection);
 	}
 
 	public static RenderedUnit renderFloatBoxUnit(FlowBlockRendererState state, Box childBox) {
@@ -71,34 +69,39 @@ public final class FlowBlockFloatRenderer {
 		return styledUnit;
 	}
 
-	private static void addLeftFloat(FlowBlockRendererState state, RenderedUnit childUnit, float blockPosition) {
+	private static void addFloat(FlowBlockRendererState state, RenderedUnit childUnit, float blockPosition, FloatDirection floatDirection) {
 		FlowRootContextSwitch flowRootContextSwitch = state.flowContext().flowRootContextSwitch();
 		FloatTracker floatTracker = flowRootContextSwitch.floatContext().getFloatTracker();
-		AbsolutePosition offsetPosition = flowRootContextSwitch.predictedPosition();
-		float offsetBlockPosition = blockPosition + offsetPosition.y();
-		float posXLeft = floatTracker.getLeftInlineOffset(offsetBlockPosition);
-		// TODO: Handle overflow and left/right collisions
-		AbsolutePosition floatPosition = new AbsolutePosition(posXLeft, blockPosition);
-		AbsolutePosition offsetFloatPosition = new AbsolutePosition(posXLeft, offsetBlockPosition);
-		AbsoluteSize floatSize = childUnit.fitSize();
-		floatTracker.addLeftFloat(new Rectangle(offsetFloatPosition, floatSize));
-		state.addChildLayoutResult(new ChildLayoutResult(childUnit, new Rectangle(floatPosition, floatSize)));
-	}
-
-	private static void addRightFloat(FlowBlockRendererState state, RenderedUnit childUnit, float blockPosition) {
-		FlowRootContextSwitch flowRootContextSwitch = state.flowContext().flowRootContextSwitch();
-		FloatTracker floatTracker = flowRootContextSwitch.floatContext().getFloatTracker();
+		AbsolutePosition trackerPositionOffset = flowRootContextSwitch.predictedPosition();
 		AbsoluteSize parentSize = state.getLocalRenderContext().preferredSize();
-		float posXRight =
-			parentSize.width() -
-			floatTracker.getRightInlineOffset(blockPosition, parentSize.width()) -
-			childUnit.fitSize().width();
-		AbsolutePosition floatPosition = new AbsolutePosition(posXRight, blockPosition);
-		AbsolutePosition offsetPosition = flowRootContextSwitch.predictedPosition();
-		AbsolutePosition offsetFloatPosition = new AbsolutePosition(posXRight, blockPosition + offsetPosition.y());
-		AbsoluteSize floatSize = childUnit.fitSize();
-		floatTracker.addRightFloat(new Rectangle(offsetFloatPosition, floatSize));
-		state.addChildLayoutResult(new ChildLayoutResult(childUnit, new Rectangle(floatPosition, floatSize)));
+		
+		float[] margins = FlowBlockMarginCalculations.computeMargins(state, childUnit.styleDirectives());
+		for (int i = 0; i < 4; i++) {
+			margins[i] = margins[i] == RelativeDimension.UNBOUNDED ? 0 : margins[i];
+		}
+
+		AbsoluteSize floatInnerSize = childUnit.fitSize();
+		AbsoluteSize floatMarginSize = LayoutSizeUtils.addPadding(floatInnerSize, margins);
+
+		float offsetBlockPosition = blockPosition + trackerPositionOffset.y();
+		float posX = floatDirection == FloatDirection.LEFT ?
+			floatTracker.getLeftInlineOffset(offsetBlockPosition) :
+			parentSize.width() - floatTracker.getRightInlineOffset(blockPosition, parentSize.width()) - childUnit.fitSize().width();
+
+		AbsolutePosition floatMarginPosition = new AbsolutePosition(posX, blockPosition);
+		AbsolutePosition floatPosition = floatDirection == FloatDirection.LEFT ?
+			new AbsolutePosition(posX + margins[0], blockPosition + margins[2]) :
+			new AbsolutePosition(posX - margins[1], blockPosition + margins[2]);
+
+		if (floatDirection == FloatDirection.LEFT) {
+			floatTracker.addLeftFloat(new Rectangle(floatMarginPosition, floatMarginSize));
+		} else {
+			floatTracker.addRightFloat(new Rectangle(floatMarginPosition, floatMarginSize));
+		}
+		state.addChildLayoutResult(new ChildLayoutResult(childUnit, new Rectangle(floatPosition, floatInnerSize)));
+
+		// TODO: Handle overflow and left/right collisions
+		// TODO: Simplify this method
 	}
 
 	private static AbsoluteSize computeFloatBoxPreferredSize(FlowBlockRendererState state, AbsoluteSize enforcedSize) {
@@ -107,7 +110,6 @@ public final class FlowBlockFloatRenderer {
 
 	private static LocalRenderContext createLocalRenderContext(FlowBlockRendererState state, AbsoluteSize preferredSize) {
 		// We do not pass the flow root context switch, as the float establishes its own root context
-		// TODO: Make sure we are passing the correct font metrics
 		return LocalRenderContext.create(preferredSize, new ContextSwitch[0]);
 	}
 

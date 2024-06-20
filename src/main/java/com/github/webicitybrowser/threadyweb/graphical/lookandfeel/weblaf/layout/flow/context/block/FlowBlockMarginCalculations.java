@@ -2,7 +2,7 @@ package com.github.webicitybrowser.threadyweb.graphical.lookandfeel.weblaf.layou
 
 import com.github.webicitybrowser.thready.dimensions.AbsoluteSize;
 import com.github.webicitybrowser.thready.dimensions.RelativeDimension;
-import com.github.webicitybrowser.thready.gui.graphical.lookandfeel.core.stage.box.Box;
+import com.github.webicitybrowser.thready.gui.directive.core.pool.DirectivePool;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.MarginDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.MarginDirective.BottomMarginDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.MarginDirective.LeftMarginDirective;
@@ -17,12 +17,12 @@ public final class FlowBlockMarginCalculations {
 
 	private static float MARGIN_AUTO = RelativeDimension.UNBOUNDED;
 
-	public static float[] computeMargins(FlowBlockRendererState state, Box box) {
+	public static float[] computeMargins(FlowBlockRendererState state, DirectivePool styleDirectives) {
 		float[] margins = new float[4];
-		margins[0] = computeInitialMargin(state, box, LeftMarginDirective.class, MARGIN_AUTO);
-		margins[1] = computeInitialMargin(state, box, RightMarginDirective.class, MARGIN_AUTO);
-		margins[2] = computeInitialMargin(state, box, TopMarginDirective.class, 0);
-		margins[3] = computeInitialMargin(state, box, BottomMarginDirective.class, 0);
+		margins[0] = computeInitialMargin(state, styleDirectives, LeftMarginDirective.class, MARGIN_AUTO);
+		margins[1] = computeInitialMargin(state, styleDirectives, RightMarginDirective.class, MARGIN_AUTO);
+		margins[2] = computeInitialMargin(state, styleDirectives, TopMarginDirective.class, 0);
+		margins[3] = computeInitialMargin(state, styleDirectives, BottomMarginDirective.class, 0);
 
 		return margins;
 	}
@@ -70,10 +70,9 @@ public final class FlowBlockMarginCalculations {
 	}
 
 	private static float computeInitialMargin(
-		FlowBlockRendererState state, Box box, Class<?  extends MarginDirective> directiveClass, float defaultValue
+		FlowBlockRendererState state, DirectivePool styleDirectives, Class<?  extends MarginDirective> directiveClass, float defaultValue
 	) {
-		SizeCalculation sizeCalculation = box
-			.styleDirectives()
+		SizeCalculation sizeCalculation = styleDirectives
 			.getDirectiveOrEmpty(directiveClass)
 			.map(directive -> directive.getSizeCalculation())
 			.orElse(_1 -> 0);
@@ -83,7 +82,7 @@ public final class FlowBlockMarginCalculations {
 		}
 
 		SizeCalculationContext sizeCalculationContext = LayoutSizeUtils.createSizeCalculationContext(
-			state.flowContext().layoutManagerContext(), box.styleDirectives(), true);
+			state.flowContext().layoutManagerContext(), styleDirectives, true);
 		return sizeCalculation.calculate(sizeCalculationContext);
 	}
 
