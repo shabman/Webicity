@@ -7,8 +7,10 @@ import com.github.webicitybrowser.thready.gui.graphical.directive.BackgroundColo
 import com.github.webicitybrowser.thready.gui.graphical.directive.ForegroundColorDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.InnerDisplayDirective;
 import com.github.webicitybrowser.threadyweb.graphical.directive.OuterDisplayDirective;
+import com.github.webicitybrowser.threadyweb.graphical.directive.layout.common.size.SizeCalculationDirective;
 import com.github.webicitybrowser.threadyweb.graphical.value.InnerDisplay;
 import com.github.webicitybrowser.threadyweb.graphical.value.OuterDisplay;
+import com.github.webicitybrowser.threadyweb.graphical.value.SizeCalculation;
 
 public final class WebDirectiveUtil {
 
@@ -40,6 +42,13 @@ public final class WebDirectiveUtil {
 			.getDirectiveOrEmpty(InnerDisplayDirective.class)
 			.map(directive -> directive.getInnerDisplay())
 			.orElse(InnerDisplay.FLOW);
+	}
+
+	public static <T extends SizeCalculationDirective> SizeCalculation getSizeCalculation(DirectivePool directives, Class<T> directiveClass) {
+		return directives
+			.getDirectiveOrEmpty(directiveClass)
+			.map(directive -> directive.getSizeCalculation())
+			.orElse(SizeCalculation.SIZE_AUTO);
 	}
 
 	
